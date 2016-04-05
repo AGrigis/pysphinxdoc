@@ -4,7 +4,7 @@
 .. |Travis| image:: https://travis-ci.org/AGrigis/pysphinxdoc.svg?branch=master
 .. _Travis: https://travis-ci.org/AGrigis/pysphinxdoc
 
-.. |Coveralls| image:: https://coveralls.io/repos/neurospin/pysphinxdoc/badge.svg?branch=master&service=github
+.. |Coveralls| image:: https://coveralls.io/repos/AGrigis/pysphinxdoc/badge.svg?branch=master&service=github
 .. _Coveralls: https://coveralls.io/github/AGrigis/pysphinxdoc
 
 .. |Python27| image:: https://img.shields.io/badge/python-2.7-blue.svg

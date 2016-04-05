@@ -162,13 +162,16 @@ class DocHelperWriter(object):
         conf_file = os.path.join(outdir, "conf.py")
         self.write_from_template(conf_file, template_conf_file, conf_info)
 
-    def write_layout(self, outdir):
+    def write_layout(self, outdir, staticdir):
         """Generate the Sphinx layout.
 
         Parameters
         ----------
         outdir : str (mandatory)
             Directory name in which to store generated files.
+        staticdir : str (mandatory)
+            The path to the static images used to display the logo and the
+            carousel.
         """
         # Check if outupt dir exists
         if not os.path.isdir(outdir):
@@ -181,9 +184,7 @@ class DocHelperWriter(object):
             for x in self.module_names]
 
         # Carousel items
-        carousel_items_path = os.path.join(
-            self.module.__path__[0], os.pardir, "doc", "source", "_static",
-            "carousel")
+        carousel_items_path = os.path.join(staticdir, "carousel")
         carousel_items = [item for item in os.listdir(carousel_items_path)]
         images = []
         indicators = []

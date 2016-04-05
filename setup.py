@@ -30,7 +30,7 @@ pkgdata = {
         "themes/scikit-learn/static/img/*.png"],
 }
 scripts = [
-    "pysphinxdoc/pysphinxdoc"]
+    "pysphinxdoc/sphinxdoc"]
 
 setup(
     name=release_info["NAME"],

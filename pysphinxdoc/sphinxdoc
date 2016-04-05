@@ -60,6 +60,7 @@ if args.verbose > 0:
 docwriter = DocHelperWriter(module_names, args.name_module,
                             verbose=args.verbose)
 srcdir = os.path.join(args.outdir, "source")
+staticdir = os.path.join(srcdir, "_static")
 generateddir = os.path.join(srcdir, "generated")
 if os.path.isdir(generateddir):
     raise IOError("'{0}' already created, can't delete it "
@@ -74,7 +75,7 @@ docwriter.write_sphinx_config(srcdir)
 # Generate the layout
 if args.verbose > 0:
     print("[info] Generating layout in {0}.".format(layoutdir))
-docwriter.write_layout(layoutdir)
+docwriter.write_layout(layoutdir, staticdir)
 # Generate the API documentation
 if args.verbose > 0:
     print("[info] Generating API documentation in {0}.".format(generateddir))

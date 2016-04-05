@@ -1,0 +1,28 @@
+Metadata-Version: 1.1
+Name: pysphinxdoc
+Version: 1.0.0
+Summary: pysphinxdoc
+Home-page: https://github.com/AGrigis/pysphinxdoc
+Author: pysphinxdoc developers
+Author-email: antoine.grigis@cea.fr
+License: CeCILL-B
+Description: 
+        ======================
+        pysphinxdoc
+        ======================
+        
+        [pysphinxdoc] API Documentation Generation Tool.
+        
+        Pysphinxdoc is a tool for generating automatically API documentation
+        for Python modules, based on their reStructuredText docstrings, using the
+        `sikit-learn <http://scikit-learn.org/>`_ theme and
+        `Sphinx <http://www.sphinx-doc.org/>`_.
+        
+Platform: OS Independent
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Environment :: X11 Applications :: Qt
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Utilities

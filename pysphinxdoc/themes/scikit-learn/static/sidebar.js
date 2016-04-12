@@ -26,21 +26,12 @@ $(function() {
   // the 'sidebarbutton' element is defined as global after its
   // creation, in the add_sidebar_button function
   var bodywrapper = $('.bodywrapper');
+  var content = $('.content');
   var sidebar = $('.sphinxsidebar');
   var sidebarwrapper = $('.sphinxsidebarwrapper');
 
   // for some reason, the document has no sidebar; do not run into errors
   if (!sidebar.length) return;
-
-  // original margin-left of the bodywrapper and width of the sidebar
-  // with the sidebar expanded
-  var bw_margin_expanded = bodywrapper.css('margin-left');
-  var ssb_width_expanded = sidebar.width();
-
-  // margin-left of the bodywrapper and width of the sidebar
-  // with the sidebar collapsed
-  var bw_margin_collapsed = '-190px';
-  var ssb_width_collapsed = '1.0em';
 
   // colors used by the current theme
   var dark_color = $('.related').css('background-color');
@@ -59,12 +50,12 @@ $(function() {
 
   function collapse_sidebar() {
     sidebarwrapper.hide();
-    sidebar.width(ssb_width_collapsed);
-    bodywrapper.css('margin-left', bw_margin_collapsed);
+    sidebar.width('1.5%');
+    content.css('margin-left', '3%');
     sidebarbutton.css({
         'margin-left': '0',
         'height': bodywrapper.height(),
-	'left': '8px'
+	'left': '0'
     });
     sidebarbutton.find('span').text('»');
     sidebarbutton.attr('title', _('Expand sidebar'));
@@ -72,11 +63,11 @@ $(function() {
   }
 
   function expand_sidebar() {
-    bodywrapper.css('margin-left', bw_margin_expanded);
-    sidebar.width(ssb_width_expanded);
+    content.css('margin-left', '16%');
+    sidebar.width('15%');
     sidebarwrapper.show();
     sidebarbutton.css({
-        'margin-left': ssb_width_expanded-13,
+        'margin-left': '90%',
         'height': bodywrapper.height(),
 	'left': '0'
     });
@@ -89,36 +80,30 @@ $(function() {
     sidebarwrapper.css({
         'float': 'left' ,
         'margin-right': '0',
-        'width': ssb_width_expanded - 13
+        'width': '90%'
     });
     // create the button
     sidebar.append(
         '<div id="sidebarbutton"><span>&laquo;</span></div>'
     );
     var sidebarbutton = $('#sidebarbutton');
-    light_color = sidebarbutton.css('background-color');
-    // find the height of the viewport to center the '<<' in the page
-    var viewport_height;
-    if (window.innerHeight)
- 	  viewport_height = window.innerHeight;
-    else
-	  viewport_height = $(window).height();
     sidebarbutton.find('span').css({
         'display': 'block',
-        'margin-top': (viewport_height - sidebar.position().top + 60) / 2
+        'margin-top': '20%',
+	    'margin-left': '0em'
     });
 
     sidebarbutton.click(toggle_sidebar);
     sidebarbutton.attr('title', _('Collapse sidebar'));
     sidebarbutton.css({
         'border-left': '1px solid ' + dark_color,
-	'border-top-left-radius' : '15px',
-	'border-bottom-left-radius' : '15px',
+	'border-top-left-radius' : '1em',
+	'border-bottom-left-radius' : '1em',
         'font-size': '1.2em',
         'cursor': 'pointer',
         'height': bodywrapper.height(),
-        'padding-top': '1px',
-        'margin-left': ssb_width_expanded - 12
+        'padding-top': '1em',
+        'margin-left': '90%'
     });
 
     sidebarbutton.hover(

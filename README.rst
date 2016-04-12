@@ -26,9 +26,9 @@ pysphinxdoc
 Pysphinxdoc is a tool for generating automatically API documentation
 for Python modules, based on their reStructuredText docstrings, using the
 `sikit-learn <http://scikit-learn.org/>`_ theme,
-`Bootstrap <http://getbootstrap.com/>` and
+`Bootstrap <http://getbootstrap.com/>`_ and
 `Sphinx <http://www.sphinx-doc.org/>`_.
-Visit this `module documentation <https://AGrigis.github.io/pysphinxdoc/>`
+Visit this `module documentation <https://AGrigis.github.io/pysphinxdoc/>`_
 for a live example.
 
 How to

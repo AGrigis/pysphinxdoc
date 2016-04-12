@@ -1,0 +1,611 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+  
+    <title>PYSPHINXDOC &mdash; pysphinxdoc</title>
+  <!-- htmltitle is before nature.css - we use this hack to load bootstrap first -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../../_static/css/bootstrap.min.css" media="screen" />
+
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pysphinxdoc" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+  
+   
+       <script type="text/javascript" src="../../_static/sidebar.js"></script>
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="../../_static/js/bootstrap.min.js" type="text/javascript"></script>
+
+  <script src="../../_static/js/angular.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var app = angular.module("navApp", []);
+    app.controller('navCtrl', ['$scope', '$window', function($scope, $window) {
+      $scope.isActive = function (viewLocation) {
+        var rel = $window.location.pathname.split("/")
+        rel = rel[rel.length - 1]
+        rel = rel.split(".")[0]
+        var active = (viewLocation === rel);
+        return active;};
+    }]);
+  </script>
+
+  </head>
+  <body role="document"><nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+        <img alt="Logo" src="../../_static/pysphinxdoc.png">
+        </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse" ng-controller="navCtrl" ng-app="navApp">
+      <ul class="nav navbar-nav">
+        <li ng-class="{ active: isActive('index') }"><a href="../../index.html">Home</a></li>
+        <li ng-class="{ active: isActive('installation') }"><a href="../../generated/installation.html">Installation</a></li>
+        <li ng-class="{ active: isActive('documentation') }"><a href="../../generated/documentation.html">Documentation</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+	        <li><a href="../../generated/pysphinxdoc.html">Pysphinxdoc</a></li>
+          </ul>
+        </li>
+        <li><a href="https://github.com/AGrigis/pysphinxdoc">PYSPHINXDOC</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="content-wrapper">
+    <div class="sphinxsidebar">
+      <div class="sphinxsidebarwrapper">
+
+        <!-- info setup -->
+          <p class="doc-version">
+           This documentation is for pysphinxdoc <strong>version 1.0.0</strong>
+          </p>
+        <p class="citing">
+          If you use the software, please do not esitate to 
+          <a &mdash; <a href="https://github.com/AGrigis/pysphinxdoc">
+          Report a Bug</a>.
+        </p>
+
+      <!-- toc tree -->
+      
+
+      </div>
+    </div>
+  
+
+  <div class="content">
+      
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pysphinxdoc.docgen</h1><div class="highlight"><pre>
+<span></span><span class="c1">##########################################################################</span>
+<span class="c1"># pysphinxdoc - Copyright (C) AGrigis, 2016</span>
+<span class="c1"># Distributed under the terms of the CeCILL-B license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">##########################################################################</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provide a &#39;DocHelperWriter&#39; class to generate the Sphinx documentation of</span>
+<span class="sd">a module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># System import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">docutils.core</span> <span class="kn">import</span> <span class="n">publish_parts</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+<div class="viewcode-block" id="DocHelperWriter"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter">[docs]</a><span class="k">class</span> <span class="nc">DocHelperWriter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A basic class to create the Sphinx documentation of a module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_names</span><span class="p">,</span> <span class="n">root_module_name</span><span class="p">,</span> <span class="n">rst_extension</span><span class="o">=</span><span class="s2">&quot;.rst&quot;</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the DocHelperWriter class</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        module_names: list of str (mandatory)</span>
+<span class="sd">            List of modules defined in the project (ie. the output of</span>
+<span class="sd">            &#39;setuptools.find_packages&#39;)</span>
+<span class="sd">        root_module_name: str (mandatory)</span>
+<span class="sd">            The name of the python package to be documented.</span>
+<span class="sd">        rst_extension : string (optional)</span>
+<span class="sd">            Extension for reST files, default &#39;.rst&#39;.</span>
+<span class="sd">        verbose : int (optional)</span>
+<span class="sd">            The verbosity level, default 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Load module description</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">root_module_name</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">root_module_name</span><span class="p">]</span>
+        <span class="n">release_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;info.py&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+            <span class="k">exec</span><span class="p">(</span><span class="n">open_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">release_info</span><span class="p">)</span>
+
+        <span class="c1"># Instance parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span> <span class="o">=</span> <span class="n">module_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rst_extension</span> <span class="o">=</span> <span class="n">rst_extension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span> <span class="o">=</span> <span class="n">root_module_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span> <span class="o">=</span> <span class="n">release_info</span>
+
+<div class="viewcode-block" id="DocHelperWriter.title_for"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.title_for">[docs]</a>    <span class="k">def</span> <span class="nf">title_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a title from a underscore-separated string.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        title: str (mandatory)</span>
+<span class="sd">            the string to format.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: str</span>
+<span class="sd">            the formated string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.rst2html"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.rst2html">[docs]</a>    <span class="k">def</span> <span class="nf">rst2html</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rst</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convert a reST formated string to a HTML string.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rst: str (mandatory)</span>
+<span class="sd">            the rst formated string.</span>
+<span class="sd">        ident: int</span>
+<span class="sd">            the number of blank prefix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out: str</span>
+<span class="sd">            the html formated string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">publish_parts</span><span class="p">(</span><span class="n">rst</span><span class="p">,</span> <span class="n">writer_name</span><span class="o">=</span><span class="s2">&quot;html&quot;</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="s2">&quot;body_pre_docinfo&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">parts</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">elem</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">html</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()])</span>
+        <span class="k">return</span> <span class="n">html</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.format_with_dict"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.format_with_dict">[docs]</a>    <span class="k">def</span> <span class="nf">format_with_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Use regular expressions to replace % by %% where % is not followed</span>
+<span class="sd">        by (.</span>
+<span class="sd">        Avoid &quot;not enough arguments for format string&quot; errors.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        string : str</span>
+<span class="sd">            a string to be formated.</span>
+<span class="sd">        dictionary : dict</span>
+<span class="sd">            a mapping used to edit the input string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">r&quot;%([^\(])&quot;</span><span class="p">,</span> <span class="s2">r&quot;</span><span class="si">%%</span><span class="s2">\1&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">r&quot;%$&quot;</span><span class="p">,</span> <span class="s2">r&quot;</span><span class="si">%%</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">string</span> <span class="o">%</span> <span class="n">dictionary</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_from_template"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_from_template">[docs]</a>    <span class="k">def</span> <span class="nf">write_from_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span> <span class="n">template_file</span><span class="p">,</span> <span class="n">template_info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Edit/save a template file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        out_file : str</span>
+<span class="sd">            the location where the edited template file content is written.</span>
+<span class="sd">        template_file : str</span>
+<span class="sd">            the location of the template file.</span>
+<span class="sd">        template_info : dict</span>
+<span class="sd">            a mapping used to edit the template content.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[debug] Generating file {0} from {1}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">out_file</span><span class="p">,</span> <span class="n">template_file</span><span class="p">))</span>
+            <span class="n">pprint</span><span class="p">(</span><span class="n">template_info</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">open_file</span><span class="o">.</span><span class="n">write</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">template_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">template_open_file</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_with_dict</span><span class="p">(</span><span class="n">template_open_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span>
+                                          <span class="n">template_info</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_sphinx_config"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_sphinx_config">[docs]</a>    <span class="k">def</span> <span class="nf">write_sphinx_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the Sphinx configuration.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if outupt dir exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Create config maping</span>
+        <span class="n">conf_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;MODULE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">,</span>
+            <span class="s2">&quot;YEAR&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span><span class="p">),</span>
+            <span class="s2">&quot;AUTHOR&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;AUTHOR&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;AUTHOR_EMAIL&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;AUTHOR_EMAIL&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;VERSION&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;__version__&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;SRCDIR&quot;</span><span class="p">:</span> <span class="n">outdir</span><span class="p">,</span>
+            <span class="s2">&quot;PYSPHINXDOCDIR&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span>
+            <span class="s2">&quot;NAME&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;NAME&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Start writting the Makefile</span>
+        <span class="n">template_make_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;Makefile&quot;</span><span class="p">)</span>
+        <span class="n">make_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">outdir</span><span class="p">),</span> <span class="s2">&quot;Makefile&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_from_template</span><span class="p">(</span><span class="n">make_file</span><span class="p">,</span> <span class="n">template_make_file</span><span class="p">,</span> <span class="n">conf_info</span><span class="p">)</span>
+
+        <span class="c1"># Start writting the conf</span>
+        <span class="n">template_conf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;conf.py&quot;</span><span class="p">)</span>
+        <span class="n">conf_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;conf.py&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_from_template</span><span class="p">(</span><span class="n">conf_file</span><span class="p">,</span> <span class="n">template_conf_file</span><span class="p">,</span> <span class="n">conf_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_layout"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_layout">[docs]</a>    <span class="k">def</span> <span class="nf">write_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">staticdir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate the Sphinx layout.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str (mandatory)</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        staticdir : str (mandatory)</span>
+<span class="sd">            The path to the static images used to display the logo and the</span>
+<span class="sd">            carousel.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if outupt dir exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Top selection panel</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="sd">&quot;&quot;&quot;&lt;li&gt;&lt;a href=&quot;{{{{ pathto(&#39;generated/{0}&#39;) }}}}&quot;&gt;&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;{1}&lt;/a&gt;&lt;/li&gt;&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">title_for</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">]</span>
+
+        <span class="c1"># Carousel items</span>
+        <span class="n">carousel_items_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">staticdir</span><span class="p">,</span> <span class="s2">&quot;carousel&quot;</span><span class="p">)</span>
+        <span class="n">carousel_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">carousel_items_path</span><span class="p">)]</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">indicators</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">carousel_items</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">cnt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">indicators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;&lt;li data-target=&#39;#examples_carousel&#39; data-slide-to=&#39;0&#39; &quot;</span>
+                    <span class="s2">&quot;class=&#39;active&#39;&gt;&lt;/li&gt;&quot;</span><span class="p">)</span>
+                <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;div class=&quot;active item&quot;&gt;&quot;&quot;&quot;</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;a href=&quot;{{pathto(&#39;index&#39;)}}&quot;&gt;&quot;&quot;&quot;</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;img src=&quot;{{ pathto(&#39;_static/carousel/%s&#39;, 1) }}&quot;&gt;&quot;&quot;&quot;</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;/div&gt;&lt;/a&gt;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">indicators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;&lt;li data-target=&#39;#examples_carousel&#39; data-slide-to=&#39;{0}&#39; &quot;</span>
+                    <span class="s2">&quot;&lt;/li&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cnt</span><span class="p">))</span>
+                <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;div class=&quot;item&quot;&gt;&lt;a href=&quot;{{pathto(&#39;index&#39;)}}&quot;&gt;&quot;&quot;&quot;</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;img src=&quot;{{ pathto(&#39;_static/carousel/%s&#39;, 1) }}&quot;&gt;&quot;&quot;&quot;</span>
+                    <span class="sd">&quot;&quot;&quot;&lt;/a&gt;&lt;/div&gt;&quot;&quot;&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+
+        <span class="c1"># Create layout maping</span>
+        <span class="n">pysphinxdoc_info</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">info_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;info.py&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">info_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+            <span class="k">exec</span><span class="p">(</span><span class="n">open_file</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">pysphinxdoc_info</span><span class="p">)</span>
+        <span class="n">layout_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;NAME_LOWER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">,</span>
+            <span class="s2">&quot;NAME_UPPER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+            <span class="s2">&quot;INDEX&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span>
+            <span class="s2">&quot;CAROUSEL_INDICATORS&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indicators</span><span class="p">),</span>
+            <span class="s2">&quot;CAROUSEL_IMAGES&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">images</span><span class="p">),</span>
+            <span class="s2">&quot;DESCRIPTION&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst2html</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;DESCRIPTION&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;LOGO&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">,</span>
+            <span class="s2">&quot;URL&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;URL&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;EXTRAURL&quot;</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EXTRAURL&quot;</span><span class="p">)</span> <span class="ow">or</span>
+                         <span class="n">pysphinxdoc_info</span><span class="p">[</span><span class="s2">&quot;URL&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;EXTRANAME&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;EXTRANAME&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;PYSPHINXDOC&quot;</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Start writting the layout</span>
+        <span class="n">template_layout_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;layout.html&quot;</span><span class="p">)</span>
+        <span class="n">layout_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;layout.html&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_from_template</span><span class="p">(</span><span class="n">layout_file</span><span class="p">,</span> <span class="n">template_layout_file</span><span class="p">,</span>
+                                 <span class="n">layout_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_index"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_index">[docs]</a>    <span class="k">def</span> <span class="nf">write_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the index page.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if outupt dir exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Create correspondance mapping</span>
+        <span class="n">index_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;MODULE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">,</span>
+            <span class="s2">&quot;DESCRIPTION&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;LONG_DESCRIPTION&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Start writting the index</span>
+        <span class="n">template_index_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;index.rst&quot;</span><span class="p">)</span>
+        <span class="n">index_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;index.rst&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_from_template</span><span class="p">(</span><span class="n">index_file</span><span class="p">,</span> <span class="n">template_index_file</span><span class="p">,</span> <span class="n">index_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_installation"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_installation">[docs]</a>    <span class="k">def</span> <span class="nf">write_installation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the installation recommendations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if outupt dir exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Generate title</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Installing `{0}`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="n">title</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)]</span>
+
+        <span class="c1"># Create correspondance mapping</span>
+        <span class="n">install_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;NAME_LOWER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">,</span>
+            <span class="s2">&quot;NAME_UPPER&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span>
+            <span class="s2">&quot;TITLE&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">title</span><span class="p">),</span>
+            <span class="s2">&quot;URL&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">release_info</span><span class="p">[</span><span class="s2">&quot;URL&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Start writting the installation</span>
+        <span class="n">template_install_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">),</span> <span class="s2">&quot;resources&quot;</span><span class="p">,</span> <span class="s2">&quot;installation.rst&quot;</span><span class="p">)</span>
+        <span class="n">install_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;installation.rst&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_from_template</span><span class="p">(</span><span class="n">install_file</span><span class="p">,</span> <span class="n">template_install_file</span><span class="p">,</span>
+                                 <span class="n">install_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_documentation_index"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_documentation_index">[docs]</a>    <span class="k">def</span> <span class="nf">write_documentation_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate the documentation index.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check output directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Get full output filename path</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="s2">&quot;documentation&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_extension</span><span class="p">)</span>
+
+        <span class="c1"># Start writing the documentation index</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[debug] Generating file {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">open_file</span><span class="o">.</span><span class="n">write</span>
+
+            <span class="c1"># Header</span>
+            <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. AUTO-GENERATED FILE -- DO NOT EDIT!</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Documentation of {0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="n">w</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Modules</span>
+            <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. raw:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;!-- Block section --&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">cnt</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;row-fluid&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_documentation_index_entry</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
+            <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.generate_documentation_index_entry"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.generate_documentation_index_entry">[docs]</a>    <span class="k">def</span> <span class="nf">generate_documentation_index_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate a new entry in the dicumentation index.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        module_name: string</span>
+<span class="sd">            the name of the module we want to index.</span>
+<span class="sd">        ident: int</span>
+<span class="sd">            the number of blank prefix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ad : string</span>
+<span class="sd">            the reST formated index description.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Try to get the module description</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">__doc__</span>
+
+        <span class="c1"># Then reST formatting</span>
+        <span class="n">spacer</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;div class=&#39;span6 box&#39;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;h2&gt;&lt;a href=&#39;{0}.html&#39;&gt;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;/a&gt;&lt;/h2&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;blockquote&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">description</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst2html</span><span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;/blockquote&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">ad</span> <span class="o">+=</span> <span class="n">spacer</span> <span class="o">+</span> <span class="s2">&quot;&lt;/div&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">ad</span></div>
+
+<div class="viewcode-block" id="DocHelperWriter.write_api_docs"><a class="viewcode-back" href="../../generated/pysphinxdoc.docgen.html#pysphinxdoc.docgen.DocHelperWriter.write_api_docs">[docs]</a>    <span class="k">def</span> <span class="nf">write_api_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outdir</span><span class="p">,</span> <span class="n">relative_to</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate API reST files.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        outdir : str</span>
+<span class="sd">            Directory name in which to store generated files.</span>
+<span class="sd">        relative_to : str</span>
+<span class="sd">            Path to which written filenames are relative. Default is None,</span>
+<span class="sd">            meaning leave path as it is.</span>
+<span class="sd">        ident: int</span>
+<span class="sd">            The number of blank prefix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check output directory</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;&#39;{0}&#39; is not a valid directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outdir</span><span class="p">))</span>
+
+        <span class="c1"># Path written into index is relative to rootpath</span>
+        <span class="n">outdir</span> <span class="o">=</span> <span class="n">outdir</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">relative_to</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">relpath</span> <span class="o">=</span> <span class="n">outdir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">relative_to</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">relpath</span> <span class="o">=</span> <span class="n">outdir</span>
+
+        <span class="c1"># Generate reST API of each module</span>
+        <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">:</span>
+
+            <span class="c1"># Import the module</span>
+            <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">__doc__</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="c1"># List all sub modules</span>
+            <span class="n">submodules_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">submodule_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">submodule_name</span> <span class="o">=</span> <span class="n">module_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">name</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">submodule_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span> <span class="ow">and</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">submodule_path</span><span class="p">)</span> <span class="ow">and</span>
+                        <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;__init__.py&quot;</span><span class="p">,</span> <span class="s2">&quot;info.py&quot;</span><span class="p">]):</span>
+
+                    <span class="c1"># Import the submodule</span>
+                    <span class="n">submodule_name</span> <span class="o">=</span> <span class="n">submodule_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">submodule_name</span><span class="p">)</span>
+                    <span class="n">submodule</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">submodule_name</span><span class="p">]</span>
+                    <span class="n">subdescription</span> <span class="o">=</span> <span class="n">submodule</span><span class="o">.</span><span class="n">__doc__</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">subdescription</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst2html</span><span class="p">(</span><span class="n">subdescription</span><span class="p">,</span>
+                                                   <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">)</span>
+                    <span class="n">submodules_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">submodule_name</span><span class="p">,</span> <span class="n">subdescription</span><span class="p">))</span>
+
+                    <span class="c1"># Write submodule API doc to file</span>
+                    <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span>
+                                           <span class="n">submodule_name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_extension</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[debug] Generating file {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+                        <span class="n">w</span> <span class="o">=</span> <span class="n">open_file</span><span class="o">.</span><span class="n">write</span>
+
+                        <span class="c1"># Add header to tell us that this documentation must</span>
+                        <span class="c1"># not be edited</span>
+                        <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. AUTO-GENERATED FILE -- DO NOT EDIT!</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">w</span><span class="p">(</span><span class="s2">&quot;:orphan:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                        <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. automodule:: {0}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">submodule_name</span><span class="p">))</span>
+
+            <span class="c1"># Write module index to file</span>
+            <span class="n">outfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">module_name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_extension</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s2">&quot;[debug] Generating file {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outfile</span><span class="p">))</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">open_file</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">open_file</span><span class="o">.</span><span class="n">write</span>
+
+                <span class="c1"># Add header to tell us that this documentation must not be</span>
+                <span class="c1"># edited</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. AUTO-GENERATED FILE -- DO NOT EDIT!</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;:orphan:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Documentation of *{0}*</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Display module description</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;{0}</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">description</span><span class="p">))</span>
+
+                <span class="c1"># Generate a table with all the generated submodules</span>
+                <span class="c1"># submodule_name (link) + first docstring line</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. raw:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span> <span class="o">+</span> <span class="s2">&quot;&lt;br/&gt;&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Table definition</span>
+                <span class="n">table</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&lt;!-- Block section --&gt;&quot;</span><span class="p">]</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;&lt;table border=&#39;1&#39; class=&#39;docutils&#39; style=&#39;width:100%&#39;&gt;&quot;</span><span class="p">)</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;colgroup&gt;&lt;col width=&#39;25%&#39;/&gt;&lt;col width=&#39;75%&#39;/&gt;&quot;</span>
+                             <span class="s2">&quot;&lt;/colgroup&gt;&quot;</span><span class="p">)</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;tbody valign=&#39;top&#39;&gt;&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Add all modules</span>
+                <span class="k">for</span> <span class="n">submodule_name</span><span class="p">,</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">submodules_list</span><span class="p">:</span>
+                    <span class="n">href</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relpath</span><span class="p">,</span> <span class="n">submodule_name</span> <span class="o">+</span> <span class="s2">&quot;.html&quot;</span><span class="p">)</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;tr class=&#39;row-odd&#39;&gt;&quot;</span><span class="p">)</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="s2">&quot;&lt;td&gt;&lt;a class=&#39;reference internal&#39; href=&#39;{0}&#39;&gt;&quot;</span>
+                        <span class="s2">&quot;&lt;em&gt;{1}&lt;/em&gt;&lt;/a&gt;&lt;/td&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">href</span><span class="p">,</span> <span class="n">submodule_name</span><span class="p">))</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;td&gt;&quot;</span><span class="p">)</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;/td&gt;&quot;</span><span class="p">)</span>
+                    <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;/tr&gt;&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Close divs</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;/tbody&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;/table&gt;&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Format the table</span>
+                <span class="n">table_with_indent</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">table</span><span class="p">]</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table_with_indent</span><span class="p">))</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer">
+    </div>
+  </div>
+  
+</div>
+
+<div class="footer">
+    &copy; 2016, pysphinxdoc developers &lt;antoine.grigis@cea.fr&gt;.
+</div>
+  </body>
+</html>

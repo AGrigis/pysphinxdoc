@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+  
+    <title>PYSPHINXDOC &mdash; pysphinxdoc</title>
+  <!-- htmltitle is before nature.css - we use this hack to load bootstrap first -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="_static/css/bootstrap.min.css" media="screen" />
+
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="pysphinxdoc" href="#" />
+    <link rel="next" title="Installing pysphinxdoc" href="generated/installation.html" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="_static/js/bootstrap.min.js" type="text/javascript"></script>
+
+  <script src="_static/js/angular.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    var app = angular.module("navApp", []);
+    app.controller('navCtrl', ['$scope', '$window', function($scope, $window) {
+      $scope.isActive = function (viewLocation) {
+        var rel = $window.location.pathname.split("/")
+        rel = rel[rel.length - 1]
+        rel = rel.split(".")[0]
+        var active = (viewLocation === rel);
+        return active;};
+    }]);
+  </script>
+
+  </head>
+  <body role="document"><nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+        <img alt="Logo" src="_static/pysphinxdoc.png">
+        </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse" ng-controller="navCtrl" ng-app="navApp">
+      <ul class="nav navbar-nav">
+        <li ng-class="{ active: isActive('index') }"><a href="#">Home</a></li>
+        <li ng-class="{ active: isActive('installation') }"><a href="generated/installation.html">Installation</a></li>
+        <li ng-class="{ active: isActive('documentation') }"><a href="generated/documentation.html">Documentation</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+	        <li><a href="generated/pysphinxdoc.html">Pysphinxdoc</a></li>
+          </ul>
+        </li>
+        <li><a href="https://github.com/AGrigis/pysphinxdoc">PYSPHINXDOC</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Banner -->
+<div class="container-fluid banner-container">
+  <div class="row banner-inner">
+      <div class="col-xs-4">
+        <div id="examples_carousel" class="carousel slide" data-ride="carousel">
+	      <ol class="carousel-indicators">
+            <li data-target='#examples_carousel' data-slide-to='0' class='active'></li>
+<li data-target='#examples_carousel' data-slide-to='1' </li>
+<li data-target='#examples_carousel' data-slide-to='2' </li>
+	      </ol>
+	      <!-- Carousel items -->
+	      <div class="carousel-inner" role="listbox">
+            <div class="active item"><a href="#"><img src="_static/carousel/image3.png"></div></a>
+<div class="item"><a href="#"><img src="_static/carousel/image1.png"></a></div>
+<div class="item"><a href="#"><img src="_static/carousel/image2.png"></a></div>
+	      </div>
+	      <!-- Carousel nav -->
+          <a class="left carousel-control" href="#examples_carousel" role="button" data-slide="prev">
+            <span class="icon-prev" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#examples_carousel" role="button" data-slide="next">
+            <span class="icon-next" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+       </div>
+	  </div>
+      <div class="col-xs-8">
+            <p>[pysphinxdoc] API Documentation Generation Tool.</p>   
+      </div>   
+  </div>
+</div>
+
+
+<div class="content-wrapper">
+    <div class="sphinxsidebar">
+      <div class="sphinxsidebarwrapper">
+
+        <!-- info setup -->
+          <p class="doc-version">
+           This documentation is for pysphinxdoc <strong>version 1.0.0</strong>
+          </p>
+        <p class="citing">
+          If you use the software, please do not esitate to 
+          <a &mdash; <a href="https://github.com/AGrigis/pysphinxdoc">
+          Report a Bug</a>.
+        </p>
+
+      <!-- toc tree -->
+      <ul>
+<li><a class="reference internal" href="#">pysphinxdoc</a><ul>
+<li><a class="reference internal" href="#contents">Contents</a></li>
+<li><a class="reference internal" href="#search">Search</a></li>
+</ul>
+</li>
+</ul>
+
+
+      </div>
+    </div>
+  
+
+  <div class="content">
+      
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pysphinxdoc">
+<h1>pysphinxdoc<a class="headerlink" href="#pysphinxdoc" title="Permalink to this headline">¶</a></h1>
+<p>Pysphinxdoc is a tool for generating automatically API documentation
+for Python modules, based on their reStructuredText docstrings, using the
+<a class="reference external" href="http://scikit-learn.org/">scikit-learn</a> theme and
+<a class="reference external" href="http://www.sphinx-doc.org/">Sphinx</a>.</p>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generated/installation.html">Installing <cite>pysphinxdoc</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/documentation.html">Documentation of PYSPHINXDOC</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="search">
+<h2>Search<a class="headerlink" href="#search" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer">
+    </div>
+  </div>
+  
+</div>
+
+<div class="footer">
+    &copy; 2016, pysphinxdoc developers &lt;antoine.grigis@cea.fr&gt;.
+</div>
+  </body>
+</html>

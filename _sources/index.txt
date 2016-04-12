@@ -1,0 +1,33 @@
+..  pysphinxdoc documentation master file
+
+
+
+============
+pysphinxdoc
+============
+
+Pysphinxdoc is a tool for generating automatically API documentation
+for Python modules, based on their reStructuredText docstrings, using the
+`scikit-learn <http://scikit-learn.org/>`_ theme and
+`Sphinx <http://www.sphinx-doc.org/>`_.
+
+
+
+Contents
+========
+.. toctree::
+    :maxdepth: 1
+
+    generated/installation
+    generated/documentation
+
+
+Search
+=======
+
+:ref:`search`
+
+
+
+
+

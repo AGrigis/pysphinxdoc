@@ -6,6 +6,11 @@
 # for details.
 ##########################################################################
 
+"""
+Provide a 'DocHelperWriter' class to generate the Sphinx documentation of
+a module.
+"""
+
 # System import
 from __future__ import print_function
 import os

@@ -35,7 +35,7 @@ How to
 ------
 
 Here is an exemple to generate the 'pysphinxdoc' module documentation:
-first execute 'python sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n pysphinxdoc
+first execute 'sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n pysphinxdoc
 -o $HOME/git/pysphinxdoc/doc/' and then in the $HOME/git/pysphinxdoc/doc/
 folder 'make raw-html'.
 
@@ -54,7 +54,6 @@ root of the module with mandatory keys:
       banner.
     * LONG_DESCRIPTION: the index page content.
     * URL: the module URL.
-    * 
     * AUTHOR: the author of the module.
     * AUTHOR_EMAIL: the author e-mail.
     * __version__: the module version.

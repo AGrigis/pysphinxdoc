@@ -15,42 +15,7 @@ import argparse
 
 # Pysphinxdoc import
 from pysphinxdoc.docgen import DocHelperWriter
-
-doc = """
-Script to auto-generate API documentation for Python modules based on their
-reStructuredText docstrings.
-
-Here is an exemple to generate the 'pysphinxdoc' module documentation:
-first execute 'python sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n pysphinxdoc
--o $HOME/git/pysphinxdoc/doc/' and then in the $HOME/git/pysphinxdoc/doc/
-folder 'make raw-html'.
-
-Expect a '$name_module/doc/source/_static' folder containing a logo named
-'$name_module.png' and an 'carousel' subfolder containing a list of images
-to be displayed in the index banner of the site.
-
-The documentation is generated from the reStructuredText docstrings of each
-module, function or class.
-
-In order to find module information, an 'info.py' module is expected at the
-root of the module with mandatory keys:
-
-    * NAME: the name of the module.
-    * DESCRIPTION: the module short description that will be displayed in the
-      banner.
-    * LONG_DESCRIPTION: the index page content.
-    * URL: the module URL.
-    * 
-    * AUTHOR: the author of the module.
-    * AUTHOR_EMAIL: the author e-mail.
-    * __version__: the module version.
-
-And optional keys:
-
-    * EXTRANAME: a name that will be displayed in the last element of the
-      navbar (default 'PYSPHINXDOC').
-    * EXTRAURL: the associated URL (default the pySphinxDoc URL).
-"""
+from pysphinxdoc.info import long_description
 
 
 # Get the module name passed in argument
@@ -61,7 +26,7 @@ def is_directory(dirarg):
         raise argparse.ArgumentError(
             "The directory '{0}' does not exist!".format(dirarg))
     return dirarg
-parser = argparse.ArgumentParser(description=doc)
+parser = argparse.ArgumentParser(description=long_description)
 parser.add_argument(
     "-v", "--verbose", dest="verbose", type=int, default=0, choices=[0, 1, 2],
     help="increase the verbosity level: 0 silent, [1, 2] verbose.")
@@ -84,33 +49,16 @@ if not os.path.isdir(srcdir):
 # Get all the modules involved
 module_names = find_packages(args.path_module)
 if args.verbose > 0:
-    print("[info] Packaged to be documented...")
+    print("[info] Documenting package {0} ...".format(args.name_module))
+    print("[info] Modules to be documented: ")
     print("[info] {0}".format(module_names))
 
 # Generate a sphinx layout, API documentation, and Sphinx configuration.
-docwriter = DocHelperWriter(module_names, args.name_module,
-                            verbose=args.verbose)
-srcdir = os.path.join(args.outdir, "source")
-staticdir = os.path.join(srcdir, "_static")
-generateddir = os.path.join(srcdir, "generated")
-if os.path.isdir(generateddir):
-    raise IOError("'{0}' already created, can't delete it "
-                  "automatically.".format(generateddir))
-os.mkdir(generateddir)
-layoutdir = os.path.join(generateddir, "_templates")
-os.mkdir(layoutdir)
-# Generate the Sphinx configuration
-if args.verbose > 0:
-    print("[info] Generating configuration in {0}.".format(srcdir))
-docwriter.write_sphinx_config(srcdir)
-# Generate the layout
-if args.verbose > 0:
-    print("[info] Generating layout in {0}.".format(layoutdir))
-docwriter.write_layout(layoutdir, staticdir)
-# Generate the API documentation
-if args.verbose > 0:
-    print("[info] Generating API documentation in {0}.".format(generateddir))
-docwriter.write_index(srcdir)
-docwriter.write_installation(generateddir)
-docwriter.write_documentation_index(generateddir)
-docwriter.write_api_docs(generateddir, relative_to=generateddir)
+docwriter = DocHelperWriter(args.path_module, args.outdir, module_names,
+                            args.name_module, verbose=args.verbose)
+docwriter.write_sphinx_config()
+docwriter.write_layout()
+docwriter.write_index()
+docwriter.write_installation()
+docwriter.write_documentation_index()
+docwriter.write_api_docs()

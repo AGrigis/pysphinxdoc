@@ -6,9 +6,8 @@
 # for details.
 ##########################################################################
 
-"""
-Provide a 'DocHelperWriter' class to generate the Sphinx documentation of
-a module.
+""" Provide a 'DocHelperWriter' class to generate the Sphinx complient
+documentation of a module.
 """
 
 # System import
@@ -16,6 +15,8 @@ from __future__ import print_function
 import os
 import sys
 import re
+import warnings
+import textwrap
 from pprint import pprint
 from docutils.core import publish_parts
 import importlib
@@ -23,30 +24,90 @@ import datetime
 
 
 class DocHelperWriter(object):
-    """ A basic class to create the Sphinx documentation of a module.
+    """ A basic class to create the Sphinx complient documentation of a module.
     """
-    def __init__(self, module_names, root_module_name, rst_extension=".rst",
-                 verbose=0):
-        """ Initialize the DocHelperWriter class
+    mandatory_fields = {
+        "NAME": "the name of the module",
+        "DESCRIPTION": ("the module short description that will be displayed "
+                        "in the banner"),
+        "LONG_DESCRIPTION": "the index page content",
+        "URL": "the module URL",
+        "AUTHOR": "the author of the module",
+        "AUTHOR_EMAIL": "the author e-mail",
+        "__version__": "the module version"
+    }
+    optional_fields = {
+        "EXTRANAME": ("a name that will be displayed in the last element "
+                      "of the navbar (default 'PYSPHINXDOC')"),
+        "EXTRAURL": "the associated URL (default the pySphinxDoc URL)"
+    }
+
+    def __init__(self, path_module, outdir, module_names, root_module_name,
+                 rst_extension=".rst", verbose=0):
+        """ Initialize the DocHelperWriter class.
 
         Parameters
         ----------
-        module_names: list of str (mandatory)
+        path_module : str (mandatory)
+            the path to the module to be documented.
+        outdir : str (mandatory)
+            the path where the documentation will be generated. Expect a
+            '$outdir/source/_static' folder containing a logo named
+            '$name_module.png' and an 'carousel' subfolder containing a list
+            of images to be displayed in the banner.
+        module_names : list of str (mandatory)
             List of modules defined in the project (ie. the output of
             'setuptools.find_packages')
-        root_module_name: str (mandatory)
+        root_module_name : str (mandatory)
             The name of the python package to be documented.
         rst_extension : string (optional)
             Extension for reST files, default '.rst'.
         verbose : int (optional)
             The verbosity level, default 0.
         """
-        # Load module description
+        # Load the module to be documented
         importlib.import_module(root_module_name)
         module = sys.modules[root_module_name]
+
+        # Generate destination folders
+        self.outdir = outdir
+        self.srcdir = os.path.join(outdir, "source")
+        self.staticdir = os.path.join(self.srcdir, "_static")
+        self.generateddir = os.path.join(self.srcdir, "generated")
+        self.layoutdir = os.path.join(self.generateddir, "_templates")
+        self.carouselpath = os.path.join(self.staticdir, "carousel")
+        self.modulepath = path_module
+        self.infopath = os.path.join(module.__path__[0], "info.py")
+        self.logo = os.path.join(self.staticdir, root_module_name + ".png")
+        if not os.path.isfile(self.infopath):
+            raise IOError("'{0}' is not a valid description file.".format(
+                self.infopath))
+        if not os.path.isfile(self.logo):
+            raise IOError("Specify a '{0}' logo file.".format(self.logo))
+        if os.path.isdir(self.generateddir):
+            raise IOError(
+                "'{0}' already created, can't delete it automatically. Use "
+                "the generated Makefile to generate the documentation using "
+                "the 'make raw-html' command or to regenerated the "
+                "documentation using the 'make html' command.".format(
+                    self.generateddir))
+        if not os.path.isdir(self.carouselpath):
+            raise IOError("{0} is not a valid folder.".format(self.staticdir))
+        os.mkdir(self.generateddir)
+        os.mkdir(self.layoutdir)
+
+        # Load the module description
         release_info = {}
-        with open(os.path.join(module.__path__[0], "info.py")) as open_file:
+        with open(self.infopath) as open_file:
             exec(open_file.read(), release_info)
+        errors = set(self.mandatory_fields.keys()) - set(release_info.keys())
+        warns = set(self.optional_fields.keys()) - set(release_info.keys())
+        if len(errors) > 0:
+            raise IOError("Missing mandatory fields {0} in '{1}'.".format(
+                errors, self.infopath))
+        if len(warns) > 0:
+            warnings.warn("Missing optional fields {0} in '{1}'.".format(
+                warns, self.infopath))
 
         # Instance parameters
         self.module_names = module_names
@@ -87,6 +148,7 @@ class DocHelperWriter(object):
         out: str
             the html formated string.
         """
+        rst = textwrap.dedent(rst).strip()
         parts = publish_parts(rst, writer_name="html")
         html = parts["body_pre_docinfo"] + parts["body"]
         html = "\n".join([" " * indent + elem for elem in html.splitlines()])
@@ -131,17 +193,13 @@ class DocHelperWriter(object):
                                           template_info)
                 w(s)
 
-    def write_sphinx_config(self, outdir):
+    def write_sphinx_config(self):
         """ Generate the Sphinx configuration.
-
-        Parameters
-        ----------
-        outdir : str
-            Directory name in which to store generated files.
         """
-        # Check if outupt dir exists
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating configuration in {0}...".format(
+                self.srcdir))
 
         # Create config maping
         conf_info = {
@@ -150,37 +208,32 @@ class DocHelperWriter(object):
             "AUTHOR": self.release_info["AUTHOR"],
             "AUTHOR_EMAIL": self.release_info["AUTHOR_EMAIL"],
             "VERSION": self.release_info["__version__"],
-            "SRCDIR": outdir,
+            "SRCDIR": self.srcdir,
             "PYSPHINXDOCDIR": os.path.dirname(__file__),
-            "NAME": self.release_info["NAME"]
+            "NAME": self.release_info["NAME"],
+            "MODULE_NAME": self.root_module_name,
+            "MODULE_PATH": self.modulepath,
+            "OUTDIR": self.outdir
         }
 
         # Start writting the Makefile
         template_make_file = os.path.join(
             os.path.dirname(__file__), "resources", "Makefile")
-        make_file = os.path.join(os.path.dirname(outdir), "Makefile")
+        make_file = os.path.join(os.path.dirname(self.srcdir), "Makefile")
         self.write_from_template(make_file, template_make_file, conf_info)
 
         # Start writting the conf
         template_conf_file = os.path.join(
             os.path.dirname(__file__), "resources", "conf.py")
-        conf_file = os.path.join(outdir, "conf.py")
+        conf_file = os.path.join(self.srcdir, "conf.py")
         self.write_from_template(conf_file, template_conf_file, conf_info)
 
-    def write_layout(self, outdir, staticdir):
-        """Generate the Sphinx layout.
-
-        Parameters
-        ----------
-        outdir : str (mandatory)
-            Directory name in which to store generated files.
-        staticdir : str (mandatory)
-            The path to the static images used to display the logo and the
-            carousel.
+    def write_layout(self):
+        """ Generate the Sphinx layout.
         """
-        # Check if outupt dir exists
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating layout in {0}...".format(self.layoutdir))
 
         # Top selection panel
         indices = [
@@ -189,8 +242,10 @@ class DocHelperWriter(object):
             for x in self.module_names]
 
         # Carousel items
-        carousel_items_path = os.path.join(staticdir, "carousel")
-        carousel_items = [item for item in os.listdir(carousel_items_path)]
+        carousel_items = [item for item in os.listdir(self.carouselpath)]
+        if len(carousel_items) == 0:
+            raise IOError("No data found in folder '{0}'.".format(
+                self.carouselpath))
         images = []
         indicators = []
         for cnt, item in enumerate(carousel_items):
@@ -234,21 +289,16 @@ class DocHelperWriter(object):
         # Start writting the layout
         template_layout_file = os.path.join(
             os.path.dirname(__file__), "resources", "layout.html")
-        layout_file = os.path.join(outdir, "layout.html")
+        layout_file = os.path.join(self.layoutdir, "layout.html")
         self.write_from_template(layout_file, template_layout_file,
                                  layout_info)
 
-    def write_index(self, outdir):
+    def write_index(self):
         """ Generate the index page.
-
-        Parameters
-        ----------
-        outdir : str
-            Directory name in which to store generated files.
         """
-        # Check if outupt dir exists
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating index in {0}.".format(self.srcdir))
 
         # Create correspondance mapping
         index_info = {
@@ -259,20 +309,16 @@ class DocHelperWriter(object):
         # Start writting the index
         template_index_file = os.path.join(
             os.path.dirname(__file__), "resources", "index.rst")
-        index_file = os.path.join(outdir, "index.rst")
+        index_file = os.path.join(self.srcdir, "index.rst")
         self.write_from_template(index_file, template_index_file, index_info)
 
-    def write_installation(self, outdir):
+    def write_installation(self):
         """ Generate the installation recommendations.
-
-        Parameters
-        ----------
-        outdir : str
-            Directory name in which to store generated files.
         """
-        # Check if outupt dir exists
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating installation in {0}.".format(
+                self.generateddir))
 
         # Generate title
         title = "Installing `{0}`".format(self.root_module_name)
@@ -290,24 +336,21 @@ class DocHelperWriter(object):
         # Start writting the installation
         template_install_file = os.path.join(
             os.path.dirname(__file__), "resources", "installation.rst")
-        install_file = os.path.join(outdir, "installation.rst")
+        install_file = os.path.join(self.generateddir, "installation.rst")
         self.write_from_template(install_file, template_install_file,
                                  install_info)
 
-    def write_documentation_index(self, outdir):
+    def write_documentation_index(self):
         """ Generate the documentation index.
-
-        Parameters
-        ----------
-        outdir : str
-            Directory name in which to store generated files.
         """
-        # Check output directory
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating documentation index in {0}.".format(
+                self.generateddir))
 
         # Get full output filename path
-        path = os.path.join(outdir, "documentation" + self.rst_extension)
+        path = os.path.join(self.generateddir,
+                            "documentation" + self.rst_extension)
 
         # Start writing the documentation index
         if self.verbose > 1:
@@ -365,29 +408,22 @@ class DocHelperWriter(object):
 
         return ad
 
-    def write_api_docs(self, outdir, relative_to=None, indent=4):
+    def write_api_docs(self, indent=4):
         """ Generate API reST files.
 
         Parameters
         ----------
-        outdir : str
-            Directory name in which to store generated files.
-        relative_to : str
-            Path to which written filenames are relative. Default is None,
-            meaning leave path as it is.
-        ident: int
+        indent: int
             The number of blank prefix.
         """
-        # Check output directory
-        if not os.path.isdir(outdir):
-            raise IOError("'{0}' is not a valid directory.".format(outdir))
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating dosumentation index in {0}.".format(
+                self.generateddir))
 
         # Path written into index is relative to rootpath
-        outdir = outdir.rstrip(os.path.sep)
-        if relative_to is not None:
-            relpath = outdir.replace(relative_to, "")
-        else:
-            relpath = outdir
+        outdir = self.generateddir.rstrip(os.path.sep)
+        relpath = outdir.replace(self.generateddir, "")
 
         # Generate reST API of each module
         for module_name in self.module_names:

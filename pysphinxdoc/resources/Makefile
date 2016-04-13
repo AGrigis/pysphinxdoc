@@ -6,8 +6,6 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
-PYDOC         = $(shell python -c "import pysphinxdoc; print pysphinxdoc.__path__[0]" 2>&1)
-MODULE        = $(shell python -c "import %(MODULE)s; import os; print os.path.dirname(%(MODULE)s.__path__[0])" 2>&1)
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -18,7 +16,6 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) sou
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  test      to dispaly the 'pysphinxdoc' module folder"
 	@echo "  clean     to remove build and generated dir, pyc and so files"
 	@echo "  html      to generate reStructuredText API documentation and to make standalone HTML files"
 	@echo "  raw-html  to make standalone HTML files"
@@ -32,27 +29,23 @@ help:
 	@echo "  linkcheck to check all external links for integrity"
 	@echo "  doctest   to run all doctests embedded in the documentation (if enabled)"
 
-test:
-	@echo $(PYDOC)
-
 clean-build:
 	-rm -rf $(BUILDDIR)/*
 
-clean-pyc:
-	find . -name "*.pyc" | xargs rm -f
+clean-conf:
+	-rm %(MODULE_PATH)s/doc/source/conf.py
 
-clean-so:
-	find . -name "*.so" | xargs rm -f
-	find . -name "*.pyd" | xargs rm -f
+clean-index:
+	-rm %(MODULE_PATH)s/doc/source/index.rst
 
 clean-generated:
 	find . -type d -name "generated" | xargs rm -rf
 
-clean: clean-build clean-pyc clean-so clean-generated
+clean: clean-build clean-conf clean-index clean-generated
 
 module-doc:
 	@echo "Generating sphinx doc..."
-	python sphinxdoc -i $(MODULE) -n %(MODULE)s
+	sphinxdoc -v 1 -p %(MODULE_PATH)s -n %(MODULE_NAME)s -o %(OUTDIR)s
  
 html: clean module-doc
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

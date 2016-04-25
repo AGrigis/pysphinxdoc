@@ -655,3 +655,8 @@ table.docutils.citation tr td.label, table.docutils.footnote tr td.label {
     color: #1D1F22;
     text-shadow: none;
 }
+
+.docutils > tbody > tr:nth-of-type(even) {
+    background-color: #f9f9f9;
+}
+

@@ -368,10 +368,11 @@ class DocHelperWriter(object):
             # Modules
             w(".. raw:: html\n\n")
             w("    <!-- Block section -->\n\n")
+            w("    <div class='container-fluid'>\n\n")
+            w("    <div class='row'>\n\n")
             for cnt, module_name in enumerate(self.module_names):
-                if cnt % 2 == 0:
-                    w("    <div class='row-fluid'>\n\n")
                 w(self.generate_documentation_index_entry(module_name))
+            w("\n    </div>")
             w("\n    </div>")
 
     def generate_documentation_index_entry(self, module_name, indent=4):
@@ -396,10 +397,10 @@ class DocHelperWriter(object):
 
         # Then reST formatting
         spacer = " " * indent
-        ad = spacer + "<div class='span6 box'>\n"
-        ad += spacer + "<h2><a href='{0}.html'>\n".format(module_name)
+        ad = spacer + "<div class='col-md-4'>\n"
+        ad += spacer + "<h3><a href='{0}.html'>\n".format(module_name)
         ad += spacer + "{0}\n".format(module_name)
-        ad += spacer + "</a></h2>\n"
+        ad += spacer + "</a></h3>\n"
         ad += spacer + "<blockquote>\n"
         if description is not None:
             ad += spacer + self.rst2html(description, indent=indent)
@@ -418,7 +419,7 @@ class DocHelperWriter(object):
         """
         # Welcome message
         if self.verbose > 0:
-            print("[info] Generating dosumentation index in {0}.".format(
+            print("[info] Generating documentation index in {0}.".format(
                 self.generateddir))
 
         # Path written into index is relative to rootpath
@@ -498,9 +499,12 @@ class DocHelperWriter(object):
                 table.append("<tbody valign='top'>")
 
                 # Add all modules
-                for submodule_name, desc in submodules_list:
+                for cnt, (submodule_name, desc) in enumerate(submodules_list):
                     href = os.path.join(relpath, submodule_name + ".html")
-                    table.append("<tr class='row-odd'>")
+                    if cnt % 2 == 0:
+                        table.append("<tr class='row-odd'>")
+                    else:
+                        table.append("<tr class='row-even'>")
                     table.append(
                         "<td><a class='reference internal' href='{0}'>"
                         "<em>{1}</em></a></td>".format(href, submodule_name))

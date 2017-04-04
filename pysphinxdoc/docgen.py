@@ -374,8 +374,8 @@ class DocHelperWriter(object):
             for cnt, module_name in enumerate(self.module_names):
                 w(self.generate_documentation_index_entry(module_name))
                 if (cnt + 1) % 3 == 0:
-                     w("\n    </div>")
-                     w("\n    <div class='row'>")
+                    w("\n    </div>")
+                    w("\n    <div class='row'>")
             w("\n    </div>")
             w("\n    </div>")
             w("\n    </div>")

@@ -369,9 +369,14 @@ class DocHelperWriter(object):
             w(".. raw:: html\n\n")
             w("    <!-- Block section -->\n\n")
             w("    <div class='container-fluid'>\n\n")
+            w("    <div class='float-left'>\n\n")
             w("    <div class='row'>\n\n")
             for cnt, module_name in enumerate(self.module_names):
                 w(self.generate_documentation_index_entry(module_name))
+                if (cnt + 1) % 3 == 0:
+                     w("\n    </div>")
+                     w("\n    <div class='row'>")
+            w("\n    </div>")
             w("\n    </div>")
             w("\n    </div>")
 

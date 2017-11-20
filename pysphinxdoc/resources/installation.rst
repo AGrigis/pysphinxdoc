@@ -36,7 +36,13 @@ Install the python package with *pip*
 Installing the current version
 ===============================
 
-Clone the project at %(URL)s.
+**Clone the project**
+
+>>> git clone %(URL)s
+
+**Install in the package directory created by the previous step**
+
+>>> python setup.py develop --user
 
 
 

@@ -15,12 +15,16 @@ from __future__ import print_function
 import os
 import sys
 import re
+import shutil
 import warnings
 import textwrap
 from pprint import pprint
 from docutils.core import publish_parts
 import importlib
 import datetime
+
+# Package import
+from .utils import examplify
 
 
 class DocHelperWriter(object):
@@ -30,6 +34,7 @@ class DocHelperWriter(object):
         "NAME": "the name of the module",
         "DESCRIPTION": ("the module short description that will be displayed "
                         "in the banner"),
+        "SUMMARY": "a summary displayed with the carousel",
         "LONG_DESCRIPTION": "the index page content",
         "URL": "the module URL",
         "AUTHOR": "the author of the module",
@@ -43,7 +48,7 @@ class DocHelperWriter(object):
     }
 
     def __init__(self, path_module, outdir, module_names, root_module_name,
-                 rst_extension=".rst", verbose=0):
+                 generate_examples=False, rst_extension=".rst", verbose=0):
         """ Initialize the DocHelperWriter class.
 
         Parameters
@@ -60,6 +65,8 @@ class DocHelperWriter(object):
             'setuptools.find_packages')
         root_module_name : str (mandatory)
             The name of the python package to be documented.
+        generate_examples: bool (optional, default False)
+            If set, generates the gallery examples from the package scripts.
         rst_extension : string (optional)
             Extension for reST files, default '.rst'.
         verbose : int (optional)
@@ -72,11 +79,15 @@ class DocHelperWriter(object):
         # Generate destination folders
         self.outdir = outdir
         self.srcdir = os.path.join(outdir, "source")
+        if not os.path.isdir(self.srcdir):
+            shutil.copytree(
+                os.path.join(path_module, "doc", "source"), self.srcdir)
         self.staticdir = os.path.join(self.srcdir, "_static")
         self.generateddir = os.path.join(self.srcdir, "generated")
         self.layoutdir = os.path.join(self.generateddir, "_templates")
         self.carouselpath = os.path.join(self.staticdir, "carousel")
         self.modulepath = path_module
+        self.generate_examples = generate_examples
         self.infopath = os.path.join(module.__path__[0], "info.py")
         self.logo = os.path.join(self.staticdir, root_module_name + ".png")
         if not os.path.isfile(self.infopath):
@@ -279,6 +290,7 @@ class DocHelperWriter(object):
             "CAROUSEL_INDICATORS": "\n".join(indicators),
             "CAROUSEL_IMAGES": "\n".join(images),
             "DESCRIPTION": self.rst2html(self.release_info["DESCRIPTION"]),
+            "SUMMARY": self.rst2html(self.release_info["SUMMARY"]),
             "LOGO": self.root_module_name,
             "URL": self.release_info["URL"],
             "EXTRAURL": (self.release_info.get("EXTRAURL") or
@@ -340,6 +352,38 @@ class DocHelperWriter(object):
         self.write_from_template(install_file, template_install_file,
                                  install_info)
 
+    def write_gallery(self):
+        """ Copy the example folder in the package to be documentated.
+        """
+        example_dir = os.path.join(self.modulepath, "examples")
+        doc_example_dir = os.path.join(self.outdir, "examples")
+        if os.path.isdir(example_dir):
+            shutil.copytree(example_dir, doc_example_dir)
+        elif self.generate_examples:
+            if not os.path.isdir(doc_example_dir):
+                os.makedirs(doc_example_dir)
+            index = os.path.join(doc_example_dir, "README.txt")
+            with open(index, "wt") as openfile:
+                header = "{0} usage examples".format(self.root_module_name)
+                openfile.write(header + "\n")
+                openfile.write("=" * len(header) + "\n\n")
+                openfile.write(".. contents:: **Contents**\n")
+                openfile.write("    :local:\n")
+                openfile.write("    :depth: 1\n\n")
+                openfile.write("Tutorial examples\n")
+                openfile.write("-" * 17 + "\n\n")
+            for script in self.release_info["SCRIPTS"]:
+                script_file = os.path.join(self.modulepath, script)
+                basename = os.path.basename(script_file)
+                if not basename.endswith(".py"):
+                    basename += ".py"
+                dstfile = os.path.join(doc_example_dir, basename)
+                examplify(script_file, dstfile)
+        else:
+            raise ValueError(
+                "No gallery examples provided. Please generate this folder or "
+                "use the '-e' option.")
+
     def write_documentation_index(self):
         """ Generate the documentation index.
         """
@@ -360,10 +404,23 @@ class DocHelperWriter(object):
 
             # Header
             w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
-            title = "Documentation of {0}\n".format(
+            title = "API documentation of {0}\n".format(
                 self.root_module_name.upper())
             w(title)
             w(self.rst_section_levels[1] * len(title) + "\n\n")
+
+            # Recommandations
+            w("This is the classes and functions reference in {0}. Please "
+              "refer to the gallery for further details, as the class and "
+              "function raw specifications may not be enough to give full "
+              "guidelines on their uses.\n\n".format(self.root_module_name))
+
+            # Add the list of modules
+            w(".. rst-class:: documentation-contents\n\n")
+            w("  **Contents**:\n")
+            for cnt, module_name in enumerate(self.module_names):
+                w("    * `{0} <{0}.html>`_\n".format(module_name))
+            w("\n")
 
             # Modules
             w(".. raw:: html\n\n")
@@ -483,7 +540,7 @@ class DocHelperWriter(object):
                 # edited
                 w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
                 w(":orphan:\n\n")
-                title = "Documentation of *{0}*\n".format(module_name)
+                title = "API documentation of *{0}*\n".format(module_name)
                 w(title)
                 w(self.rst_section_levels[1] * len(title) + "\n\n")
 

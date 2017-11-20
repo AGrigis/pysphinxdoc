@@ -4,15 +4,15 @@
 %(DESCRIPTION)s
 
 
-Contents
-========
 .. toctree::
     :maxdepth: 1
+    :hidden:
 
     generated/installation
     generated/documentation
 
 
+=======
 Search
 =======
 

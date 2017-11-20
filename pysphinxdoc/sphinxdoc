@@ -39,6 +39,9 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--outdir", dest="outdir", required=True, metavar="PATH",
     help="the path to write documentation.", type=is_directory)
+parser.add_argument(
+    "-e", "--examples", dest="examples", action="store_true",
+    help="generate the examples from the package scripts.")
 args = parser.parse_args()
 
 # Check that a '$name_module/doc/source' folder has been created in the project
@@ -55,10 +58,12 @@ if args.verbose > 0:
 
 # Generate a sphinx layout, API documentation, and Sphinx configuration.
 docwriter = DocHelperWriter(args.path_module, args.outdir, module_names,
-                            args.name_module, verbose=args.verbose)
+                            args.name_module, args.examples,
+                            verbose=args.verbose)
 docwriter.write_sphinx_config()
 docwriter.write_layout()
 docwriter.write_index()
 docwriter.write_installation()
+docwriter.write_gallery()
 docwriter.write_documentation_index()
 docwriter.write_api_docs()

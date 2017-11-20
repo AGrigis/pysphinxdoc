@@ -37,6 +37,21 @@
 <!-- header -->
 {% block header %}
 
+{%- block banner -%}
+<div class="banner">
+  <div class="container-fluid banner-container">
+    <div class="row banner-inner">
+      <div class="col-xs-4">
+        <img alt="Logo" src="{{ pathto("_static/%(LOGO)s.png", 1) }}">
+      </div>
+      <div class="col-xs-8">
+        %(DESCRIPTION)s
+      </div>
+    </div>  
+  </div>
+</div>
+{%- endblock -%}
+
 {%- block navbar -%}
 <nav class="navbar navbar-default navbar-static-top">
   <div class="container-fluid">
@@ -48,57 +63,26 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="{{ pathto('index') }}">
-        <img alt="Logo" src="{{ pathto("_static/%(LOGO)s.png", 1) }}">
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse" ng-controller="navCtrl" ng-app="navApp">
       <ul class="nav navbar-nav">
         <li ng-class="{ active: isActive('index') }"><a href="{{pathto('index')}}">Home</a></li>
         <li ng-class="{ active: isActive('installation') }"><a href="{{pathto('generated/installation')}}">Installation</a></li>
-        <li ng-class="{ active: isActive('documentation') }"><a href="{{pathto('generated/documentation')}}">Documentation</a></li>
-        <li class="dropdown">
+        <li ng-class="{ active: isActive('gallery') }"><a href="{{pathto('auto_gallery/gallery')}}">Gallery</a></li>
+        <li ng-class="{ active: isActive('documentation') }"><a href="{{pathto('generated/documentation')}}">API documentation</a></li>
+        <!--<li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 	        %(INDEX)s
           </ul>
-        </li>
+        </li>-->
         <li><a href="%(EXTRAURL)s">%(EXTRANAME)s</a></li>
       </ul>
     </div>
   </div>
 </nav>
 {%- endblock -%}
-
-{%- if pagename == 'index' %}
-<!-- Banner -->
-<div class="container-fluid banner-container">
-  <div class="row banner-inner">
-      <div class="col-xs-4">
-        <div id="examples_carousel" class="carousel" data-ride="carousel">
-	      <ol class="carousel-indicators">
-            %(CAROUSEL_INDICATORS)s
-	      </ol>
-	      <!-- Carousel items -->
-	      <div class="carousel-inner" role="listbox">
-            %(CAROUSEL_IMAGES)s
-	      </div>
-	      <!-- Carousel nav -->
-          <a class="left carousel-control" href="#examples_carousel" role="button" data-slide="prev">
-            <span class="icon-prev" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="right carousel-control" href="#examples_carousel" role="button" data-slide="next">
-            <span class="icon-next" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
-       </div>
-	  </div>
-      <div class="col-xs-8">
-        %(DESCRIPTION)s   
-      </div>   
-  </div>
-</div>
-{%- endif %}
 
 {% endblock %}
 
@@ -131,9 +115,41 @@
   {% endif %}
 
   <div class="content">
+
+    {%- if pagename == 'index' %}
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-xs-4">
+            <div id="examples_carousel" class="carousel" data-ride="carousel">
+              <ol class="carousel-indicators">
+                %(CAROUSEL_INDICATORS)s
+              </ol>
+              <!-- Carousel items -->
+              <div class="carousel-inner" role="listbox">
+                %(CAROUSEL_IMAGES)s
+              </div>
+              <!-- Carousel nav -->
+              <a class="left carousel-control" href="#examples_carousel" role="button" data-slide="prev">
+                <span class="icon-prev" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="right carousel-control" href="#examples_carousel" role="button" data-slide="next">
+                <span class="icon-next" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+           </div>
+          </div>
+          <div class="col-xs-8">
+            %(SUMMARY)s
+          </div>   
+      </div>
+    </div>
+    {%- endif %}
+
     {%- block document %}
       {{ super() }}
     {%- endblock %}
+
     <div class="clearer">
     </div>
   </div>

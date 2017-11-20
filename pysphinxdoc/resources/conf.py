@@ -38,7 +38,15 @@ extensions = [
     "numpy_ext.numpydoc",
     "custom_ext.hidden_code_block",
     "custom_ext.hidden_technical_block",
-    "custom_ext.link_to_block"]
+    "custom_ext.link_to_block",
+    "sphinx_gallery.gen_gallery"]
+
+# Configure gallery
+sphinx_gallery_conf = {
+    "doc_module": "%(MODULE)s",
+    "backreferences_dir": os.path.join("generated", "gallery"),
+    "examples_dirs": os.path.join(os.pardir, "examples"),
+    "gallery_dirs": "auto_gallery"}
 
 # Remove some numpy-linked warnings
 numpydoc_show_class_members = False
@@ -49,7 +57,7 @@ autosummary_generate = True
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [
     os.path.join("%(PYSPHINXDOCDIR)s", "templates"),
-    "generated/_templates/"]
+    os.path.join("generated", "_templates")]
 
 # The suffix of source filenames.
 source_suffix = ".rst"
@@ -62,7 +70,7 @@ master_doc = "index"
 
 # General information about the project.
 project = u"%(MODULE)s"
-copyright = u"%(YEAR)s, %(AUTHOR)s <%(AUTHOR_EMAIL)s>"
+copyright = u"""%(YEAR)s, %(AUTHOR)s <%(AUTHOR_EMAIL)s>"""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -91,7 +99,7 @@ release = version
 exclude_patterns = [
     "examples",
     templates_path,
-    "scikit-learn/static/ML_MAPS_README.rst"]
+    os.path.join("scikit-learn", "static", "ML_MAPS_README.rst")]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -212,7 +220,7 @@ htmlhelp_basename = "%(NAME)s"
 # (source start file, target name, title, author, documentclass
 # [howto/manual]).
 latex_documents = [
-    ("index", "%(MODULE)s.tex", "%(MODULE)s Documentation", "%(AUTHOR)s",
+    ("index", "%(MODULE)s.tex", "%(MODULE)s Documentation", """%(AUTHOR)s""",
      "manual"),
 ]
 

@@ -9,7 +9,7 @@
 
 # Pysphinxdoc current version
 version_major = 1
-version_minor = 0
+version_minor = 1
 version_micro = 0
 
 # Expected by setup.py: string of form "X.Y.Z"
@@ -26,12 +26,20 @@ CLASSIFIERS = ["Development Status :: 5 - Production/Stable",
 
 # Project descriptions
 description = "[pysphinxdoc] API Documentation Generation Tool."
+SUMMARY = """
+.. container:: summary-carousel
+
+    PySphinxDoc is a Python module for **fast and easy documentation of Python
+    Packages**.
+
+    It provides the **sphinxdoc** Python script for this purpose.
+"""
 long_description = """
 ============
 pysphinxdoc
 ============
 
-Pysphinxdoc is a tool for generating automatically API documentation
+PySphinxDoc is a tool for generating automatically API documentation
 for Python modules, based on their reStructuredText docstrings, using the
 `sikit-learn <http://scikit-learn.org/>`_ theme,
 `Bootstrap <http://getbootstrap.com/>`_ and
@@ -40,13 +48,17 @@ Visit this `module documentation <https://AGrigis.github.io/pysphinxdoc/>`_
 for a live example.
 
 Here is an exemple to generate the 'pysphinxdoc' module documentation:
-first execute 'sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n pysphinxdoc
--o $HOME/git/pysphinxdoc/doc/' and then in the $HOME/git/pysphinxdoc/doc/
-folder 'make raw-html'.
+
+* first generate the rst files 'sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n
+  pysphinxdoc -o $HOME/git/pysphinxdoc/doc/'.
+* then generate the html files 'cd $HOME/git/pysphinxdoc/doc; make raw-html'.
 
 Expect a '$name_module/doc/source/_static' folder containing a logo named
 '$name_module.png' and an 'carousel' subfolder containing a list of images
 to be displayed in the index banner of the site.
+
+Expect also an 'axamples' folders containing the gallery items as expected
+by the 'sphinx_ext' plugin.
 
 The documentation is generated from the reStructuredText docstrings of each
 module, function or class.
@@ -57,6 +69,7 @@ root of the module with mandatory keys:
     * NAME: the name of the module.
     * DESCRIPTION: the module short description that will be displayed in the
       banner.
+    * SUMMARY: a text displayed with the carousel.
     * LONG_DESCRIPTION: the index page content.
     * URL: the module URL.
     * AUTHOR: the author of the module.

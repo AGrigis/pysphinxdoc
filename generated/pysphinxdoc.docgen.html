@@ -15,11 +15,12 @@
     
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0.0',
+        VERSION:     '1.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -51,7 +52,18 @@
   </script>
 
   </head>
-  <body role="document"><nav class="navbar navbar-default navbar-static-top">
+  <body role="document"><div class="banner">
+  <div class="container-fluid banner-container">
+    <div class="row banner-inner">
+      <div class="col-xs-4">
+        <img alt="Logo" src="../_static/pysphinxdoc.png">
+      </div>
+      <div class="col-xs-8">
+            <p>[pysphinxdoc] API Documentation Generation Tool.</p>
+      </div>
+    </div>  
+  </div>
+</div><nav class="navbar navbar-default navbar-static-top">
   <div class="container-fluid">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -61,34 +73,32 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="../index.html">
-        <img alt="Logo" src="../_static/pysphinxdoc.png">
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse" ng-controller="navCtrl" ng-app="navApp">
       <ul class="nav navbar-nav">
         <li ng-class="{ active: isActive('index') }"><a href="../index.html">Home</a></li>
         <li ng-class="{ active: isActive('installation') }"><a href="installation.html">Installation</a></li>
-        <li ng-class="{ active: isActive('documentation') }"><a href="documentation.html">Documentation</a></li>
-        <li class="dropdown">
+        <li ng-class="{ active: isActive('gallery') }"><a href="../auto_gallery/gallery.html">Gallery</a></li>
+        <li ng-class="{ active: isActive('documentation') }"><a href="documentation.html">API documentation</a></li>
+        <!--<li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 	        <li><a href="pysphinxdoc.html">Pysphinxdoc</a></li>
           </ul>
-        </li>
+        </li>-->
         <li><a href="https://github.com/AGrigis/pysphinxdoc">PYSPHINXDOC</a></li>
       </ul>
     </div>
   </div>
 </nav>
-
-
 <div class="content-wrapper">
     <div class="sphinxsidebar">
       <div class="sphinxsidebarwrapper">
 
         <!-- info setup -->
           <p class="doc-version">
-           This documentation is for pysphinxdoc <strong>version 1.0.0</strong>
+           This documentation is for pysphinxdoc <strong>version 1.1.0</strong>
           </p>
         <p class="citing">
           If you use the software, please do not esitate to 
@@ -111,12 +121,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <span class="target" id="module-pysphinxdoc.docgen"></span><p>Provide a &#8216;DocHelperWriter&#8217; class to generate the Sphinx documentation of
-a module.</p>
+  <span class="target" id="module-pysphinxdoc.docgen"></span><p>Provide a &#8216;DocHelperWriter&#8217; class to generate the Sphinx complient
+documentation of a module.</p>
 <dl class="class">
 <dt id="pysphinxdoc.docgen.DocHelperWriter">
-<em class="property">class </em><code class="descclassname">pysphinxdoc.docgen.</code><code class="descname">DocHelperWriter</code><span class="sig-paren">(</span><em>module_names</em>, <em>root_module_name</em>, <em>rst_extension='.rst'</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter" title="Permalink to this definition">¶</a></dt>
-<dd><p>A basic class to create the Sphinx documentation of a module.</p>
+<em class="property">class </em><code class="descclassname">pysphinxdoc.docgen.</code><code class="descname">DocHelperWriter</code><span class="sig-paren">(</span><em>path_module</em>, <em>outdir</em>, <em>module_names</em>, <em>root_module_name</em>, <em>generate_examples=False</em>, <em>rst_extension='.rst'</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A basic class to create the Sphinx complient documentation of a module.</p>
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.format_with_dict">
 <code class="descname">format_with_dict</code><span class="sig-paren">(</span><em>string</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.format_with_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.format_with_dict" title="Permalink to this definition">¶</a></dt>
@@ -149,11 +159,11 @@ Avoid &#8220;not enough arguments for format string&#8221; errors.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>module_name: string</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>module_name: string</strong></p>
 <blockquote>
 <div><p>the name of the module we want to index.</p>
 </div></blockquote>
-<p><strong>ident: int</strong> :</p>
+<p><strong>ident: int</strong></p>
 <blockquote>
 <div><p>the number of blank prefix.</p>
 </div></blockquote>
@@ -169,6 +179,16 @@ Avoid &#8220;not enough arguments for format string&#8221; errors.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="pysphinxdoc.docgen.DocHelperWriter.mandatory_fields">
+<code class="descname">mandatory_fields</code><em class="property"> = {'AUTHOR_EMAIL': 'the author e-mail', '__version__': 'the module version', 'NAME': 'the name of the module', 'AUTHOR': 'the author of the module', 'URL': 'the module URL', 'SUMMARY': 'a summary displayed with the carousel', 'LONG_DESCRIPTION': 'the index page content', 'DESCRIPTION': 'the module short description that will be displayed in the banner'}</em><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.mandatory_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pysphinxdoc.docgen.DocHelperWriter.optional_fields">
+<code class="descname">optional_fields</code><em class="property"> = {'EXTRAURL': 'the associated URL (default the pySphinxDoc URL)', 'EXTRANAME': &quot;a name that will be displayed in the last element of the navbar (default 'PYSPHINXDOC')&quot;}</em><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.optional_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.rst2html">
 <code class="descname">rst2html</code><span class="sig-paren">(</span><em>rst</em>, <em>indent=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.rst2html"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.rst2html" title="Permalink to this definition">¶</a></dt>
@@ -177,17 +197,17 @@ Avoid &#8220;not enough arguments for format string&#8221; errors.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rst: str (mandatory)</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rst: str (mandatory)</strong></p>
 <blockquote>
 <div><p>the rst formated string.</p>
 </div></blockquote>
-<p><strong>ident: int</strong> :</p>
+<p><strong>ident: int</strong></p>
 <blockquote>
 <div><p>the number of blank prefix.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out: str</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">out: str</p>
 <blockquote class="last">
 <div><p>the html formated string.</p>
 </div></blockquote>
@@ -205,13 +225,13 @@ Avoid &#8220;not enough arguments for format string&#8221; errors.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>title: str (mandatory)</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>title: str (mandatory)</strong></p>
 <blockquote>
 <div><p>the string to format.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out: str</strong> :</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">out: str</p>
 <blockquote class="last">
 <div><p>the formated string.</p>
 </div></blockquote>
@@ -223,22 +243,13 @@ Avoid &#8220;not enough arguments for format string&#8221; errors.</p>
 
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_api_docs">
-<code class="descname">write_api_docs</code><span class="sig-paren">(</span><em>outdir</em>, <em>relative_to=None</em>, <em>indent=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_api_docs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_api_docs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_api_docs</code><span class="sig-paren">(</span><em>indent=4</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_api_docs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_api_docs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate API reST files.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str</p>
-<blockquote>
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-<p><strong>relative_to</strong> : str</p>
-<blockquote>
-<div><p>Path to which written filenames are relative. Default is None,
-meaning leave path as it is.</p>
-</div></blockquote>
-<p><strong>ident: int</strong> :</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>indent: int</strong></p>
 <blockquote class="last">
 <div><p>The number of blank prefix.</p>
 </div></blockquote>
@@ -250,20 +261,8 @@ meaning leave path as it is.</p>
 
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_documentation_index">
-<code class="descname">write_documentation_index</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_documentation_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_documentation_index" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_documentation_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_documentation_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_documentation_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the documentation index.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str</p>
-<blockquote class="last">
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
@@ -293,80 +292,33 @@ meaning leave path as it is.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="pysphinxdoc.docgen.DocHelperWriter.write_gallery">
+<code class="descname">write_gallery</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_gallery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_gallery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the example folder in the package to be documentated.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_index">
-<code class="descname">write_index</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_index" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the index page.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str</p>
-<blockquote class="last">
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_installation">
-<code class="descname">write_installation</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_installation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_installation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_installation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_installation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_installation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the installation recommendations.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str</p>
-<blockquote class="last">
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_layout">
-<code class="descname">write_layout</code><span class="sig-paren">(</span><em>outdir</em>, <em>staticdir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_layout" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_layout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the Sphinx layout.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str (mandatory)</p>
-<blockquote>
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-<p><strong>staticdir</strong> : str (mandatory)</p>
-<blockquote class="last">
-<div><p>The path to the static images used to display the logo and the
-carousel.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pysphinxdoc.docgen.DocHelperWriter.write_sphinx_config">
-<code class="descname">write_sphinx_config</code><span class="sig-paren">(</span><em>outdir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_sphinx_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_sphinx_config" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_sphinx_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/docgen.html#DocHelperWriter.write_sphinx_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.docgen.DocHelperWriter.write_sphinx_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the Sphinx configuration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outdir</strong> : str</p>
-<blockquote class="last">
-<div><p>Directory name in which to store generated files.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>
@@ -376,6 +328,7 @@ carousel.</p>
           </div>
         </div>
       </div>
+
     <div class="clearer">
     </div>
   </div>
@@ -383,7 +336,7 @@ carousel.</p>
 </div>
 
 <div class="footer">
-    &copy; 2016, pysphinxdoc developers &lt;antoine.grigis@cea.fr&gt;.
+    &copy; 2017, pysphinxdoc developers &lt;antoine.grigis@cea.fr&gt;.
 </div>
   </body>
 </html>

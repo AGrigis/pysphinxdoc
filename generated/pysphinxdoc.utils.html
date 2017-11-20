@@ -30,8 +30,6 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="top" title="pysphinxdoc" href="../index.html" />
-    <link rel="next" title="API documentation of PYSPHINXDOC" href="documentation.html" />
-    <link rel="prev" title="pysphinxdoc" href="../index.html" />
   
    
        <script type="text/javascript" src="../_static/sidebar.js"></script>
@@ -80,7 +78,7 @@
     <div id="navbar" class="navbar-collapse collapse" ng-controller="navCtrl" ng-app="navApp">
       <ul class="nav navbar-nav">
         <li ng-class="{ active: isActive('index') }"><a href="../index.html">Home</a></li>
-        <li ng-class="{ active: isActive('installation') }"><a href="#">Installation</a></li>
+        <li ng-class="{ active: isActive('installation') }"><a href="installation.html">Installation</a></li>
         <li ng-class="{ active: isActive('gallery') }"><a href="../auto_gallery/gallery.html">Gallery</a></li>
         <li ng-class="{ active: isActive('documentation') }"><a href="documentation.html">API documentation</a></li>
         <!--<li class="dropdown">
@@ -109,15 +107,7 @@
         </p>
 
       <!-- toc tree -->
-      <ul>
-<li><a class="reference internal" href="#">Installing <cite>pysphinxdoc</cite></a><ul>
-<li><a class="reference internal" href="#installing-a-stable-version">Installing a stable version</a><ul>
-<li><a class="reference internal" href="#install-the-python-package-with-pip">Install the python package with <em>pip</em></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#installing-the-current-version">Installing the current version</a></li>
-</ul>
-</li>
+      <ul class="simple">
 </ul>
 
 
@@ -131,43 +121,30 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="installing-pysphinxdoc">
-<span id="install-guid"></span><h1>Installing <cite>pysphinxdoc</cite><a class="headerlink" href="#installing-pysphinxdoc" title="Permalink to this headline">¶</a></h1>
-<p>This tutorial will walk you through the process of intalling PYSPHINXDOC...</p>
+  <span class="target" id="module-pysphinxdoc.utils"></span><p>Provide usefull functions to interpret a Python code.</p>
+<dl class="function">
+<dt id="pysphinxdoc.utils.examplify">
+<code class="descclassname">pysphinxdoc.utils.</code><code class="descname">examplify</code><span class="sig-paren">(</span><em>filename</em>, <em>outfile</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysphinxdoc/utils.html#examplify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysphinxdoc.utils.examplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read Python code from the file named by the first argument, and
+write an example as expected by sphinx gallery.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>filename: str</strong></p>
 <blockquote>
-<div><ul class="simple">
-<li><a class="reference internal" href="#install-release"><span>Install an official release</span></a>. This
-is the best approach for users who want a stable version.</li>
-<li><a class="reference internal" href="#install-development"><span>Install the latest development version</span></a>. This is best for users who want to contribute
-to the project.</li>
-</ul>
+<div><p>the file path with the Python code to read.</p>
 </div></blockquote>
-<div class="section" id="installing-a-stable-version">
-<span id="install-release"></span><h2>Installing a stable version<a class="headerlink" href="#installing-a-stable-version" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="install-the-python-package-with-pip">
-<h3>Install the python package with <em>pip</em><a class="headerlink" href="#install-the-python-package-with-pip" title="Permalink to this headline">¶</a></h3>
-<p><strong>Install the package without the root privilege</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span> <span class="n">pysphinxdoc</span>
-</pre></div>
-</div>
-<p><strong>Install the package with the root privilege</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">pysphinxdoc</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="installing-the-current-version">
-<span id="install-development"></span><h2>Installing the current version<a class="headerlink" href="#installing-the-current-version" title="Permalink to this headline">¶</a></h2>
-<p><strong>Clone the project</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">AGrigis</span><span class="o">/</span><span class="n">pysphinxdoc</span>
-</pre></div>
-</div>
-<p><strong>Install in the package directory created by the previous step</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">develop</span> <span class="o">--</span><span class="n">user</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p><strong>outfile: str</strong></p>
+<blockquote class="last">
+<div><p>the destination file with the gallery example.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 
 
           </div>

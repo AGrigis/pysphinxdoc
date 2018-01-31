@@ -55,6 +55,11 @@ if args.verbose > 0:
     print("[info] Documenting package {0} ...".format(args.name_module))
     print("[info] Modules to be documented: ")
     print("[info] {0}".format(module_names))
+    module_names = [name for name in module_names
+                    if name.startswith(args.name_module)]
+    print("[info] Surviving modules: ")
+    print("[info] {0}".format(module_names))
+    
 
 # Generate a sphinx layout, API documentation, and Sphinx configuration.
 docwriter = DocHelperWriter(args.path_module, args.outdir, module_names,

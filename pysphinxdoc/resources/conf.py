@@ -36,7 +36,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    "sphinx.ext.pngmath",
+    sphinx_math,
     "sphinx.ext.ifconfig",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",

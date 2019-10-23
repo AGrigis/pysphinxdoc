@@ -21,6 +21,7 @@ pkgdata = {
         "resources/Makefile", "resources/*.rst", "resources/*.html",
         "resources/*.py",
         "sphinxext/*/*.py", "sphinxext/*/*.txt",
+        "sphinxext/*/_static/*",
         "templates/*.rst",
         "themes/scikit-learn/*.conf", "themes/scikit-learn/static/*.js",
         "themes/scikit-learn/static/*.gif", "themes/scikit-learn/static/*.rst",

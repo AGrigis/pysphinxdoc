@@ -101,6 +101,7 @@ ISRELEASE = True
 VERSION = __version__
 PROVIDES = ["pysphinxdoc"]
 REQUIRES = [
-    "sphinx>=1.0"
+    "sphinx>=1.0",
+    "matplotlib"
 ]
 EXTRA_REQUIRES = {}

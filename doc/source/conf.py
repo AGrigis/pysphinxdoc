@@ -13,7 +13,6 @@ import os
 from distutils.version import LooseVersion
 import subprocess
 import sphinx
-import pysphinxdoc
 
 
 installdir = os.path.abspath("../..")
@@ -22,7 +21,7 @@ if "PYTHONPATH" in env:
     env["PYTHONPATH"] = env["PYTHONPATH"] + ":" + installdir
 else:
     env["PYTHONPATH"] = installdir
-cmd = ["sphinxdoc", "-v 2", "-p",  installdir, "-n", "pysphinxdoc", "-o", ".."]
+cmd = ["python", os.path.join(installdir, "pyshinxdoc", "sphinxdoc"), "-v 2", "-p",  installdir, "-n", "pysphinxdoc", "-o", ".."]
 subprocess.check_call(cmd, env=env)
 sys.path.insert(0, installdir)
 

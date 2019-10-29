@@ -37,7 +37,7 @@ else:
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
-sys.path.insert(0, os.path.join("/home/ag239446/git/pysphinxdoc/pysphinxdoc", "sphinxext"))
+sys.path.insert(0, os.path.join(installdir, "pysphinxdoc", "sphinxext"))
 
 # Add any Sphinx extension module names here, as strings.
 # They can be extensions

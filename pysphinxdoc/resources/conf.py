@@ -15,6 +15,10 @@ import sphinx
 
 if LooseVersion(sphinx.__version__) < LooseVersion("1"):
     raise RuntimeError("Need sphinx >= 1 for autodoc to work correctly.")
+if LooseVersion(sphinx.__version__) < LooseVersion("1.8"):
+    sphinx_math = "sphinx.ext.pngmath"
+else:
+    sphinx_math = "sphinx.ext.imgmath"
 
 # -- General configuration --------------------------------------------------
 
@@ -31,7 +35,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    "sphinx.ext.pngmath",
+    sphinx_math,
     "sphinx.ext.ifconfig",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
@@ -98,7 +102,8 @@ release = version
 # for source files.
 exclude_patterns = [
     "examples",
-    templates_path,
+    templates_path[0],
+    templates_path[1],
     os.path.join("scikit-learn", "static", "ML_MAPS_README.rst")]
 
 # The reST default role (used for this markup: `text`) to use for all

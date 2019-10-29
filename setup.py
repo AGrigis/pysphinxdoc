@@ -23,12 +23,17 @@ pkgdata = {
         "sphinxext/*/*.py", "sphinxext/*/*.txt",
         "sphinxext/*/_static/*",
         "templates/*.rst",
-        "themes/scikit-learn/*.conf", "themes/scikit-learn/static/*.js",
-        "themes/scikit-learn/static/*.gif", "themes/scikit-learn/static/*.rst",
-        "themes/scikit-learn/static/*.css",
-        "themes/scikit-learn/static/js/*.js",
-        "themes/scikit-learn/static/css/*.css",
-        "themes/scikit-learn/static/img/*.png"],
+        "themes/*/*.conf",
+        "themes/*/static/*.js",
+        "themes/*/static/*.gif",
+        "themes/*/static/*.rst",
+        "themes/*/static/*.css",
+        "themes/*/static/js/*.js",
+        "themes/*/static/css/*.css",
+        "themes/*/static/img/*.png",
+        "themes/*/static/img/*.jpg",
+        "themes/*/static/img/backgrounds/*.jpg",
+        "themes/*/static/ico/*.png"],
 }
 scripts = [
     "pysphinxdoc/sphinxdoc"]

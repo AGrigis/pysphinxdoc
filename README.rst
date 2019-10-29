@@ -1,5 +1,5 @@
 
-|Travis|_ |Coveralls|_ |Python27|_ |Python34|_ |PyPi|_ 
+|Travis|_ |Coveralls|_ |Python27|_ |Python34|_ |PyPi|_ |Doc|_
 
 .. |Travis| image:: https://travis-ci.org/AGrigis/pysphinxdoc.svg?branch=master
 .. _Travis: https://travis-ci.org/AGrigis/pysphinxdoc
@@ -15,6 +15,10 @@
 
 .. |PyPi| image:: https://badge.fury.io/py/pysphinxdoc.svg
 .. _PyPi: https://badge.fury.io/py/pysphinxdoc
+
+.. |Doc| image:: https://readthedocs.org/projects/pysphinxdoc/badge/?version=latest
+.. _Doc: https://pysphinxdoc.readthedocs.io/en/latest/?badge=latest
+
 
 
 ===========

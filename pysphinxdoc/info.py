@@ -25,7 +25,7 @@ CLASSIFIERS = ["Development Status :: 5 - Production/Stable",
                "Topic :: Utilities"]
 
 # Project descriptions
-description = "[pysphinxdoc] API Documentation Generation Tool."
+description = "Python package documentation generation tool."
 SUMMARY = """
 .. container:: summary-carousel
 

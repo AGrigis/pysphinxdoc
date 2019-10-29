@@ -260,23 +260,27 @@ class DocHelperWriter(object):
         images = []
         indicators = []
         for cnt, item in enumerate(carousel_items):
-            if cnt == 0:
-                indicators.append(
-                    "<li data-target='#examples_carousel' data-slide-to='0' "
-                    "class='active'></li>")
-                images.append(
-                    """<div class="active item">"""
-                    """<a href="{{pathto('index')}}">"""
-                    """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
-                    """</div></a>""" % item)
-            else:
-                indicators.append(
-                    "<li data-target='#examples_carousel' data-slide-to='{0}' "
-                    "</li>".format(cnt))
-                images.append(
-                    """<div class="item"><a href="{{pathto('index')}}">"""
-                    """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
-                    """</a></div>""" % item)
+            images.append(
+                """<img src="{{ pathto('_static/carousel/%s', 1) }}"""
+                """">"""% item)
+            # if cnt == 0:
+            #     indicators.append(
+            #         "<li data-target='#examples_carousel' data-slide-to='0' "
+            #         "class='active'></li>")
+            #     images.append(
+            #         """<div class="active item">"""
+            #         """<a href="{{pathto('index')}}">"""
+            #         """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
+            #         """</div></a>""" % item)
+
+            # else:
+            #     indicators.append(
+            #         "<li data-target='#examples_carousel' data-slide-to='{0}' "
+            #         "</li>".format(cnt))
+            #     images.append(
+            #         """<div class="item"><a href="{{pathto('index')}}">"""
+            #         """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
+            #         """</a></div>""" % item)
 
         # Create layout maping
         pysphinxdoc_info = {}

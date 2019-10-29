@@ -262,7 +262,7 @@ class DocHelperWriter(object):
         for cnt, item in enumerate(carousel_items):
             images.append(
                 """<img src="{{ pathto('_static/carousel/%s', 1) }}"""
-                """>""" % item)
+                """">""" % item)
             # if cnt == 0:
             #     indicators.append(
             #         "<li data-target='#examples_carousel' data-slide-to='0' "

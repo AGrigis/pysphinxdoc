@@ -12,6 +12,8 @@ from __future__ import print_function
 import os
 from setuptools import find_packages
 import argparse
+import sys
+from unittest.mock import MagicMock
 
 # Pysphinxdoc import
 from pysphinxdoc.docgen import DocHelperWriter
@@ -42,7 +44,21 @@ parser.add_argument(
 parser.add_argument(
     "-e", "--examples", dest="examples", action="store_true",
     help="generate the examples from the package scripts.")
+parser.add_argument(
+    "-m", "--mock", nargs="+",
+    help="mock some modules if dependencies cannot be installed when building "
+         "the project.")
 args = parser.parse_args()
+
+
+# Mock uninstalled modules
+class Mock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        return MagicMock()
+if args.mock is not None:
+    sys.modules.update((mod_name, Mock()) for mod_name in args.mock)
+
 
 # Check that a '$name_module/doc/source' folder has been created in the project
 srcdir = os.path.join(args.path_module, "doc", "source")

@@ -13,7 +13,10 @@ import os
 from setuptools import find_packages
 import argparse
 import sys
-from unittest.mock import MagicMock
+if sys.version_info >= (3, 3):
+    from unittest.mock import MagicMock
+else:
+    from mock import MagicMock
 
 # Pysphinxdoc import
 from pysphinxdoc.docgen import DocHelperWriter

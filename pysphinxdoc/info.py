@@ -102,6 +102,7 @@ VERSION = __version__
 PROVIDES = ["pysphinxdoc"]
 REQUIRES = [
     "sphinx>=1.0",
-    "matplotlib"
+    "matplotlib",
+    "mock"
 ]
 EXTRA_REQUIRES = {}

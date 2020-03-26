@@ -51,14 +51,25 @@ parser.add_argument(
     "-m", "--mock", nargs="+",
     help="mock some modules if dependencies cannot be installed when building "
          "the project.")
+parser.add_argument(
+    "-k", "--mock-params", nargs="+",
+    help="the parameters returned by mocked modules.")
+parser.add_argument(
+    "-r", "--mock-returns", nargs="+",
+    help="the parameters values returned by mocked modules.")
 args = parser.parse_args()
 
 
 # Mock uninstalled modules
+mock_kwargs = {}
+if args.mock_params is not None:
+    for key, val_repr in zip(args.mock_params, args.mock_returns):
+        print(key, val_repr)
+        mock_kwargs[key] = eval(val_repr)
 class Mock(MagicMock):
     @classmethod
     def __getattr__(cls, name):
-        return MagicMock()
+        return MagicMock(**mock_kwargs)
 if args.mock is not None:
     sys.modules.update((mod_name, Mock()) for mod_name in args.mock)
 

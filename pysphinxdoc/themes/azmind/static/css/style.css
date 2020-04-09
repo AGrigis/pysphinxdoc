@@ -19,6 +19,9 @@ img { max-width: 100%; }
 
 
 /***** Fix parameters/returns *****/
+.field-list {
+  overflow: auto;
+}
 .field-list dl {
   width: 100%;
   overflow: hidden;

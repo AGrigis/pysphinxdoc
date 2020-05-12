@@ -328,8 +328,14 @@ class DocHelperWriter(object):
         index_file = os.path.join(self.srcdir, "index.rst")
         self.write_from_template(index_file, template_index_file, index_info)
 
-    def write_installation(self):
+    def write_installation(self, pypi_index=None):
         """ Generate the installation recommendations.
+
+        Parameters
+        ----------
+        pypi_index: str default None
+            set the pypi index of the module: useful if different from the
+            module name.
         """
         # Welcome message
         if self.verbose > 0:
@@ -343,7 +349,7 @@ class DocHelperWriter(object):
 
         # Create correspondance mapping
         install_info = {
-            "NAME_LOWER": self.root_module_name,
+            "NAME_LOWER": pypi_index or self.root_module_name,
             "NAME_UPPER": self.root_module_name.upper(),
             "TITLE": "\n".join(title),
             "URL": self.release_info["URL"]

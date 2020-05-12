@@ -57,6 +57,10 @@ parser.add_argument(
 parser.add_argument(
     "-r", "--mock-returns", nargs="+",
     help="the parameters values returned by mocked modules.")
+parser.add_argument(
+    "-i", "--pypi-index",
+    help="the pypi index of the module: useful if different from the module "
+         "name.")
 args = parser.parse_args()
 
 
@@ -64,7 +68,6 @@ args = parser.parse_args()
 mock_kwargs = {}
 if args.mock_params is not None:
     for key, val_repr in zip(args.mock_params, args.mock_returns):
-        print(key, val_repr)
         mock_kwargs[key] = eval(val_repr)
 class Mock(MagicMock):
     @classmethod
@@ -98,7 +101,7 @@ docwriter = DocHelperWriter(args.path_module, args.outdir, module_names,
 docwriter.write_sphinx_config()
 docwriter.write_layout()
 docwriter.write_index()
-docwriter.write_installation()
+docwriter.write_installation(pypi_index=args.pypi_index)
 docwriter.write_gallery()
 docwriter.write_documentation_index()
 docwriter.write_api_docs()

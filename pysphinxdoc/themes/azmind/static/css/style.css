@@ -18,6 +18,40 @@ img { max-width: 100%; }
 ::selection { background: #f35b3f; color: #fff; text-shadow: none; }
 
 
+/***** Fix parameters/returns *****/
+.field-list {
+  overflow: auto;
+}
+.field-list dl {
+  width: 100%;
+  overflow: hidden;
+  background: #ff0;
+  padding: 0;
+  margin: 0
+}
+.field-list dt {
+  float: left;
+  width: 20%;
+  padding: 0  !important;
+  margin: 0  !important;
+  margin-top: 1em !important;
+  background: white !important;
+  color: #222  !important;
+  line-height: 1.2em !important;
+  border: none !important;
+}
+.field-list dd {
+  float: left;
+  width: 80%;
+  border-left: 3px solid !important;
+  background: #FFF8DC !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-top: 1em !important;
+  padding-left: 1em !important;
+}
+
+
 /***** Wrapper *****/
 
 .wrapper { display: block; }

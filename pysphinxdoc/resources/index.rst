@@ -11,14 +11,3 @@
     generated/installation
     generated/documentation
 
-
-=======
-Search
-=======
-
-:ref:`search`
-
-
-
-
-

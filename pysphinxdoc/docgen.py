@@ -258,29 +258,20 @@ class DocHelperWriter(object):
             raise IOError("No data found in folder '{0}'.".format(
                 self.carouselpath))
         images = []
-        indicators = []
         for cnt, item in enumerate(carousel_items):
             images.append(
                 """<img src="{{ pathto('_static/carousel/%s', 1) }}"""
                 """">""" % item)
-            # if cnt == 0:
-            #     indicators.append(
-            #         "<li data-target='#examples_carousel' data-slide-to='0' "
-            #         "class='active'></li>")
-            #     images.append(
-            #         """<div class="active item">"""
-            #         """<a href="{{pathto('index')}}">"""
-            #         """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
-            #         """</div></a>""" % item)
-
-            # else:
-            #     indicators.append(
-            #         "<li data-target='#examples_carousel' data-slide-to="
-            #         "'{0}' </li>".format(cnt))
-            #     images.append(
-            #         """<div class="item"><a href="{{pathto('index')}}">"""
-            #         """<img src="{{ pathto('_static/carousel/%s', 1) }}">"""
-            #         """</a></div>""" % item)
+        sections = []
+        for item in self.module_names:
+            sections.append(
+                """<li><a href="{{pathto('generated/%s')}}">""" % item +
+                """%s</a></li>""" % item)
+        links = []
+        for key, val in (self.release_info.get("LINKS") or {}).items():
+            links.append("<li><a href='{1}'>{0}</a></li>".format(key, val))
+        if len(links) > 0:
+            links.insert(0, "<li>LINKS</li>")
 
         # Create layout maping
         pysphinxdoc_info = {}
@@ -291,7 +282,6 @@ class DocHelperWriter(object):
             "NAME_LOWER": self.root_module_name,
             "NAME_UPPER": self.root_module_name.upper(),
             "INDEX": "\n".join(indices),
-            "CAROUSEL_INDICATORS": "\n".join(indicators),
             "CAROUSEL_IMAGES": "\n".join(images),
             "DESCRIPTION": self.rst2html(self.release_info["DESCRIPTION"]),
             "SUMMARY": self.rst2html(self.release_info["SUMMARY"]),
@@ -299,7 +289,9 @@ class DocHelperWriter(object):
             "URL": self.release_info["URL"],
             "EXTRAURL": (self.release_info.get("EXTRAURL") or
                          pysphinxdoc_info["URL"]),
-            "EXTRANAME": self.release_info.get("EXTRANAME") or "PYSPHINXDOC"
+            "EXTRANAME": self.release_info.get("EXTRANAME") or "PYSPHINXDOC",
+            "SECTIONS": "".join(sections),
+            "LINKS": "".join(links)
         }
 
         # Start writting the layout

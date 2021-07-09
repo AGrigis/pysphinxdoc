@@ -65,7 +65,9 @@
                     | replace("</li>", "</li>;")
                     | striptags
                     | replace("\">", "%") %}
-                {% set localtoc = localtoc.split(";") %}
+                {% if localtoc != "" %}
+                    {% set localtoc = localtoc.split(";") %}
+                {% endif %}
 				<ul class="list-unstyled menu-elements">
 					<li class="active">
 						<a href="{{pathto('index')}}"><i class="fas fa-home"></i> Home</a>
@@ -84,21 +86,27 @@
 					</li>
 					<li>
 						<a href="#otherSections" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" role="button" aria-controls="otherSections">
-							<i class="fas fa-sync"></i>Sections
+							<i class="fas fa-sync"></i>Sections Shortcuts
 						</a>
 						<ul class="collapse list-unstyled" id="otherSections">
-                            {% for element in localtoc %}
-                                {% for part in element.split("#") %}
-                                    {% set el = part.split("%") %}
-                                    {% set url = el[0] | trim | safe %}
-                                    {% set entry = el[1] | trim | safe %}
-                                    {%- if url != '#' and url != '' %}
-							        <li>
-								        <a href="#{{url}}">{{entry | title}}</a>
-							        </li>
-                                    {%- endif %}
+                            %(LINKS)s
+                            {% if localtoc != "" %}
+                                <li>SECTIONS</li>
+                                {% for element in localtoc %}
+                                    {% for part in element.split("#") %}
+                                        {% set el = part.split("%") %}
+                                        {% set url = el[0] | trim | safe %}
+                                        {% set entry = el[1] | trim | safe %}
+                                        {%- if url != '#' and url != '' %}
+							            <li>
+								            <a href="#{{url}}">{{entry | title}}</a>
+							            </li>
+                                        {%- endif %}
+                                    {% endfor %}
                                 {% endfor %}
-                            {% endfor %}
+                            {% endif %}
+                            <li>API</li>
+                            %(SECTIONS)s
 						</ul>
 					</li>
 				</ul>

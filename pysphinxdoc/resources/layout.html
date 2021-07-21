@@ -243,11 +243,11 @@
         {%- if pagename == 'index' %}
         <script>
             $('#mosaic').Mosaic({
-                maxRowHeight: 350,
+                maxRowHeight: 400,
                 refitOnResize: true,
                 refitOnResizeDelay: false,
                 defaultAspectRatio: 1,
-                maxRowHeightPolicy: 'oversize'
+                maxRowHeightPolicy: 'skip'
             });
         </script>
         {% endif %}

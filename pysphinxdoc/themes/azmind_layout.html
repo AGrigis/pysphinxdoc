@@ -235,12 +235,11 @@
         {%- if pagename == 'index' %}
         <script>
             $('#mosaic').Mosaic({
-                maxRowHeight: 800,
+                maxRowHeight: 400,
                 refitOnResize: true,
                 refitOnResizeDelay: false,
-                defaultAspectRatio: 0.5,
-                maxRowHeightPolicy: 'crop',
-                responsiveWidthThreshold: 500
+                defaultAspectRatio: 1,
+                maxRowHeightPolicy: 'skip'
             });
         </script>
         {% endif %}

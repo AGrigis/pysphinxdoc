@@ -17,6 +17,10 @@ img { max-width: 100%; }
 ::-moz-selection { background: #f35b3f; color: #fff; text-shadow: none; }
 ::selection { background: #f35b3f; color: #fff; text-shadow: none; }
 
+.summary-carousel ul {
+    list-style-type: none;
+}
+
 
 /***** Fix parameters/returns *****/
 .field-list {

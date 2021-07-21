@@ -546,41 +546,51 @@ class DocHelperWriter(object):
                 w(title)
                 w(self.rst_section_levels[1] * len(title) + "\n\n")
 
-                # Display module description
-                w("{0}\n\n".format(description))
+                if len(submodules_list) > 0:
 
-                # Generate a table with all the generated submodules
-                # submodule_name (link) + first docstring line
-                w(".. raw:: html\n\n")
-                w(" " * indent + "<br/>")
+                    # Display module description
+                    w("{0}\n\n".format(description))
 
-                # Table definition
-                table = ["<!-- Block section -->"]
-                table.append(
-                    "<table border='1' class='docutils' style='width:100%'>")
-                table.append("<colgroup><col width='25%'/><col width='75%'/>"
-                             "</colgroup>")
-                table.append("<tbody valign='top'>")
+                    # Generate a table with all the generated submodules
+                    # submodule_name (link) + first docstring line
+                    w(".. raw:: html\n\n")
+                    w(" " * indent + "<br/>")
 
-                # Add all modules
-                for cnt, (submodule_name, desc) in enumerate(submodules_list):
-                    href = os.path.join(relpath, submodule_name + ".html")
-                    if cnt % 2 == 0:
-                        table.append("<tr class='row-odd'>")
-                    else:
-                        table.append("<tr class='row-even'>")
+                    # Table definition
+                    table = ["<!-- Block section -->"]
+                    table.append("<table border='1' class='docutils' "
+                                 "style='width:100%'>")
                     table.append(
-                        "<td><a class='reference internal' href='{0}'>"
-                        "<em>{1}</em></a></td>".format(href, submodule_name))
-                    table.append("<td>")
-                    table.append(desc)
-                    table.append("</td>")
-                    table.append("</tr>")
+                        "<colgroup><col width='25%'/><col width='75%'/>"
+                        "</colgroup>")
+                    table.append("<tbody valign='top'>")
 
-                # Close divs
-                table.append("</tbody>\n\n")
-                table.append("</table>")
+                    # Add all modules
+                    for cnt, (submodule_name, desc) in enumerate(
+                            submodules_list):
+                        href = os.path.join(relpath, submodule_name + ".html")
+                        if cnt % 2 == 0:
+                            table.append("<tr class='row-odd'>")
+                        else:
+                            table.append("<tr class='row-even'>")
+                        table.append(
+                            "<td><a class='reference internal' href='{0}'>"
+                            "<em>{1}</em></a></td>".format(
+                                href, submodule_name))
+                        table.append("<td>")
+                        table.append(desc)
+                        table.append("</td>")
+                        table.append("</tr>")
 
-                # Format the table
-                table_with_indent = [" " * indent + line for line in table]
-                w("\n".join(table_with_indent))
+                    # Close divs
+                    table.append("</tbody>\n\n")
+                    table.append("</table>")
+
+                    # Format the table
+                    table_with_indent = [" " * indent + line for line in table]
+                    w("\n".join(table_with_indent))
+
+                else:
+
+                    # Document the module itself
+                    w(".. automodule:: {0}\n\n:members:".format(module_name))

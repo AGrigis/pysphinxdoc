@@ -21,6 +21,10 @@ img { max-width: 100%; }
     list-style-type: none;
 }
 
+.document dd {
+    margin-left: 4rem;
+}
+
 
 /***** Fix parameters/returns *****/
 .field-list {
@@ -272,7 +276,7 @@ div.section h2 {
 
 div.section p {
     text-align: left;
-    font-size: 20px;
+    margin: 0;
 }
 
 div.section h2 a {

@@ -593,4 +593,4 @@ class DocHelperWriter(object):
                 else:
 
                     # Document the module itself
-                    w(".. automodule:: {0}\n\n:members:".format(module_name))
+                    w(".. automodule:: {0}\n\n".format(module_name))

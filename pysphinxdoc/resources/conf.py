@@ -57,6 +57,7 @@ numpydoc_show_class_members = False
 
 # generate autosummary even if no references
 autosummary_generate = True
+autoclass_content = "both"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [

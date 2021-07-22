@@ -632,6 +632,7 @@ class DocHelperWriter(object):
                 # Add the list of members
                 for mod_name, desc in (
                         [(module_name, description)] + submodules_list):
+                    desc = desc.strip("\n").strip(" ")
                     kdata = mod_members[mod_name]["classes"]
                     fdata = mod_members[mod_name]["functions"]
                     w("{0}\n".format(mod_name))

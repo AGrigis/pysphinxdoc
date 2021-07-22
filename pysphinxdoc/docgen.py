@@ -11,17 +11,18 @@ documentation of a module.
 """
 
 # System import
-from __future__ import print_function
 import os
 import sys
 import re
 import shutil
 import warnings
 import textwrap
+import collections
 from pprint import pprint
 from docutils.core import publish_parts
 import importlib
 import datetime
+import inspect
 
 # Package import
 from .utils import examplify
@@ -122,6 +123,7 @@ class DocHelperWriter(object):
 
         # Instance parameters
         self.module_names = module_names
+        self.module_members = {}
         self.rst_extension = rst_extension
         self.root_module_name = root_module_name
         self.rst_section_levels = ['*', '=', '-', '~', '^']
@@ -417,12 +419,19 @@ class DocHelperWriter(object):
               "function raw specifications may not be enough to give full "
               "guidelines on their uses.\n\n".format(self.root_module_name))
 
-            # Add the list of modules
-            w(".. rst-class:: documentation-contents\n\n")
-            w("  **Contents**:\n")
-            for cnt, module_name in enumerate(self.module_names):
-                w("    * `{0} <{0}.html>`_\n".format(module_name))
-            w("\n")
+            # Get modules content
+            content = {}
+            for module_name in self.module_names:
+                data = self.module_members.get(module_name)
+                if data is None:
+                    content[module_name] = []
+                    continue
+                _content = []
+                for key1, item1 in data.items():
+                    for key2, item2 in item1.items():
+                        for path, (rpath, _) in item2.items():
+                            _content.append((path, rpath))
+                content[module_name] = _content
 
             # Modules
             w(".. raw:: html\n\n")
@@ -437,7 +446,22 @@ class DocHelperWriter(object):
                     w("\n    <div class='row'>")
             w("\n    </div>")
             w("\n    </div>")
-            w("\n    </div>")
+            w("\n    </div>\n\n")
+
+            # Add the list of modules
+            w(".. rst-class:: documentation-contents\n\n")
+            w("  **Contents**:\n")
+            for cnt, module_name in enumerate(self.module_names):
+                _content = content[module_name]
+                w("    * `{0} <{0}.html>`_\n".format(module_name))
+                if len(_content) > 0:
+                    w("        .. hidden-technical-block::\n")
+                    w("          :label: [+ show/hide members]\n")
+                    w("          :starthidden: true\n\n")
+                    for path, rpath in _content:
+                        w("          `{0} <{1}.html>`_\n\n".format(
+                            path, rpath))
+            w("\n")
 
     def generate_documentation_index_entry(self, module_name, indent=4):
         """ Generate a new entry in the dicumentation index.
@@ -473,6 +497,39 @@ class DocHelperWriter(object):
 
         return ad
 
+    def getmembers(self, mod):
+        """ Return the members of a module.
+        """
+        mod_name = mod.__name__
+        add_members = []
+        if hasattr(mod, "__all__"):
+            add_members = mod.__all__
+        funcs = dict(
+            (key, ("{0}.{1}".format(val.__module__, key), val))
+            for key, val in inspect.getmembers(mod, inspect.isfunction)
+            if key in add_members or val.__module__.startswith(mod_name))
+        classes = dict(
+            (key, ("{0}.{1}".format(val.__module__, key), val))
+            for key, val in inspect.getmembers(mod, inspect.isclass)
+            if key in add_members or val.__module__.startswith(mod_name))
+        unique_functions = set()
+        unique_classes = set()
+        members = {"classes": classes, "functions": funcs}
+        for name, struct in members.items():
+            _struct = {}
+            for key, val in struct.items():
+                if name == "functions":
+                    unique_functions.add(val[0])
+                else:
+                    unique_classes.add(val[0])
+                if key in add_members:
+                    mkey = "{0}.{1}".format(mod_name, key)
+                else:
+                    mkey = "{0}.{1}".format(val[1].__module__, key)
+                _struct[mkey] = val
+            members[name] = collections.OrderedDict(sorted(_struct.items()))
+        return members, unique_functions, unique_classes
+
     def write_api_docs(self, indent=4):
         """ Generate API reST files.
 
@@ -496,6 +553,9 @@ class DocHelperWriter(object):
             # Import the module
             importlib.import_module(module_name)
             module = sys.modules[module_name]
+            mod_members = {}
+            members, unique_functions, unique_classes = self.getmembers(module)
+            mod_members[module_name] = members
             description = module.__doc__ or ""
 
             # List all sub modules
@@ -511,25 +571,48 @@ class DocHelperWriter(object):
                     submodule_name = submodule_name.replace(".py", "")
                     importlib.import_module(submodule_name)
                     submodule = sys.modules[submodule_name]
+                    members, sub_functions, sub_classes = self.getmembers(
+                        submodule)
+                    mod_members[submodule_name] = members
+                    unique_functions = unique_functions.union(sub_functions)
+                    unique_classes = unique_classes.union(sub_classes)
                     subdescription = submodule.__doc__ or ""
-                    subdescription = self.rst2html(subdescription,
-                                                   indent=indent)
                     submodules_list.append((submodule_name, subdescription))
+            self.module_members[module_name] = mod_members
 
-                    # Write submodule API doc to file
-                    outfile = os.path.join(outdir,
-                                           submodule_name + self.rst_extension)
-                    if self.verbose > 1:
-                        print("[debug] Generating file {0}.".format(outfile))
-                    with open(outfile, "wt") as open_file:
-                        w = open_file.write
+            # Write module & submodule API doc to file
+            if self.verbose > 1:
+                print("[debug] Unique functions: {0}.".format(
+                    unique_functions))
+                print("[debug] Unique classes: {0}.".format(
+                    unique_classes))
+            for klass in unique_classes:
+                outfile = os.path.join(outdir, klass + self.rst_extension)
+                if self.verbose > 1:
+                    print("[debug] Generating file {0}.".format(outfile))
+                with open(outfile, "wt") as open_file:
+                    w = open_file.write
 
-                        # Add header to tell us that this documentation must
-                        # not be edited
-                        w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
-                        w(":orphan:\n\n")
+                    # Add header to tell us that this documentation must
+                    # not be edited
+                    w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
+                    w(":orphan:\n\n")
 
-                        w(".. automodule:: {0}\n\n".format(submodule_name))
+                    w(".. autoclass:: {0}\n".format(klass))
+                    w("     :members:\n\n")
+            for func in unique_functions:
+                outfile = os.path.join(outdir, func + self.rst_extension)
+                if self.verbose > 1:
+                    print("[debug] Generating file {0}.".format(outfile))
+                with open(outfile, "wt") as open_file:
+                    w = open_file.write
+
+                    # Add header to tell us that this documentation must
+                    # not be edited
+                    w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
+                    w(":orphan:\n\n")
+
+                    w(".. autofunction:: {0}\n\n".format(func))
 
             # Write module index to file
             outfile = os.path.join(outdir, module_name + self.rst_extension)
@@ -546,51 +629,25 @@ class DocHelperWriter(object):
                 w(title)
                 w(self.rst_section_levels[1] * len(title) + "\n\n")
 
-                if len(submodules_list) > 0:
-
-                    # Display module description
-                    w("{0}\n\n".format(description))
-
-                    # Generate a table with all the generated submodules
-                    # submodule_name (link) + first docstring line
-                    w(".. raw:: html\n\n")
-                    w(" " * indent + "<br/>")
-
-                    # Table definition
-                    table = ["<!-- Block section -->"]
-                    table.append("<table border='1' class='docutils' "
-                                 "style='width:100%'>")
-                    table.append(
-                        "<colgroup><col width='25%'/><col width='75%'/>"
-                        "</colgroup>")
-                    table.append("<tbody valign='top'>")
-
-                    # Add all modules
-                    for cnt, (submodule_name, desc) in enumerate(
-                            submodules_list):
-                        href = os.path.join(relpath, submodule_name + ".html")
-                        if cnt % 2 == 0:
-                            table.append("<tr class='row-odd'>")
-                        else:
-                            table.append("<tr class='row-even'>")
-                        table.append(
-                            "<td><a class='reference internal' href='{0}'>"
-                            "<em>{1}</em></a></td>".format(
-                                href, submodule_name))
-                        table.append("<td>")
-                        table.append(desc)
-                        table.append("</td>")
-                        table.append("</tr>")
-
-                    # Close divs
-                    table.append("</tbody>\n\n")
-                    table.append("</table>")
-
-                    # Format the table
-                    table_with_indent = [" " * indent + line for line in table]
-                    w("\n".join(table_with_indent))
-
-                else:
-
-                    # Document the module itself
-                    w(".. automodule:: {0}\n\n".format(module_name))
+                # Add the list of members
+                for mod_name, desc in (
+                        [(module_name, description)] + submodules_list):
+                    kdata = mod_members[mod_name]["classes"]
+                    fdata = mod_members[mod_name]["functions"]
+                    w("{0}\n".format(mod_name))
+                    w(self.rst_section_levels[4] * len(mod_name) + "\n\n")
+                    w("{0}\n\n".format(desc))
+                    if len(kdata) > 0 or len(fdata) > 0:
+                        w(".. rst-class:: documentation-contents\n\n")
+                    if len(kdata) > 0:
+                        w("  **Classes**:\n")
+                        for klass, (rklass, _) in kdata.items():
+                            w("    * `{0} <{1}.html>`_\n".format(
+                                klass, rklass))
+                        w("\n")
+                    if len(fdata) > 0:
+                        w("  **Functions**:\n")
+                        for func, (rfunc, _) in fdata.items():
+                            w("    * `{0} <{1}.html>`_\n".format(
+                                func, rfunc))
+                        w("\n")

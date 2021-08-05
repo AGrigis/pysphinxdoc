@@ -566,14 +566,11 @@ class DocHelperWriter(object):
         for name, struct in members.items():
             _struct = {}
             for key, val in struct.items():
+                mkey = "{0}.{1}".format(mod_name, key)
                 if name == "functions":
-                    unique_functions.add(val[0])
+                    unique_functions.add(mkey)
                 else:
-                    unique_classes.add(val[0])
-                if key in add_members:
-                    mkey = "{0}.{1}".format(mod_name, key)
-                else:
-                    mkey = "{0}.{1}".format(val[1].__module__, key)
+                    unique_classes.add(mkey)
                 _struct[mkey] = val
             members[name] = collections.OrderedDict(sorted(_struct.items()))
         return members, unique_functions, unique_classes

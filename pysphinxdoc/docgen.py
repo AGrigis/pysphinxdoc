@@ -563,14 +563,21 @@ class DocHelperWriter(object):
         unique_functions = set()
         unique_classes = set()
         members = {"classes": classes, "functions": funcs}
+        pprint(members)
         for name, struct in members.items():
             _struct = {}
             for key, val in struct.items():
                 mkey = "{0}.{1}".format(mod_name, key)
                 if name == "functions":
-                    unique_functions.add(mkey)
+                    if key in add_members:
+                        unique_functions.add(val[0])
+                    else:
+                        unique_functions.add(mkey)
                 else:
-                    unique_classes.add(mkey)
+                    if key in add_members:
+                        unique_classes.add(val[0])
+                    else:
+                        unique_classes.add(mkey)
                 _struct[mkey] = val
             members[name] = collections.OrderedDict(sorted(_struct.items()))
         return members, unique_functions, unique_classes

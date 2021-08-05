@@ -1,5 +1,5 @@
 
-|Travis|_ |Coveralls|_ |Python27|_ |Python34|_ |PyPi|_ |Doc|_
+|PythonVersion|_ |Travis|_ |Coveralls|_ |PyPi|_ |Doc|_
 
 .. |Travis| image:: https://travis-ci.org/AGrigis/pysphinxdoc.svg?branch=master
 .. _Travis: https://travis-ci.org/AGrigis/pysphinxdoc
@@ -7,11 +7,8 @@
 .. |Coveralls| image:: https://coveralls.io/repos/AGrigis/pysphinxdoc/badge.svg?branch=master&service=github
 .. _Coveralls: https://coveralls.io/github/AGrigis/pysphinxdoc
 
-.. |Python27| image:: https://img.shields.io/badge/python-2.7-blue.svg
-.. _Python27: https://badge.fury.io/py/pysphinxdoc
-
-.. |Python34| image:: https://img.shields.io/badge/python-3.4-blue.svg
-.. _Python34: https://badge.fury.io/py/pysphinxdoc
+.. |PythonVersion| image:: https://img.shields.io/badge/python-3.5%20%7C%203.6-blue
+.. _PythonVersion: https://img.shields.io/badge/python-3.5%20%7C%203.6-blue
 
 .. |PyPi| image:: https://badge.fury.io/py/pysphinxdoc.svg
 .. _PyPi: https://badge.fury.io/py/pysphinxdoc

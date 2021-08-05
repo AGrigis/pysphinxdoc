@@ -1,8 +1,8 @@
 language: python
 
 python:
-    - "2.7"
-    - "3.4"
+    - "3.5"
+    - "3.6"
 
 install:
     - pip install docutils
@@ -10,12 +10,12 @@ install:
     - pip install nose-exclude
     - pip install coverage
     - pip install coveralls
-    - pip install pep8
+    - pip install pycodestyle
     - pip install .
 
 script:
     - python setup.py nosetests
-    - pep8 ./pysphinxdoc --ignore="E121,E123,E126,E226,E24,E704,E402,E731,W601"
+    - pycodestyle pysphinxdoc --ignore="E121,E123,E126,E226,E24,E704,E402,E731,W601,W504" --exclude="pysphinxdoc/sphinxext"
 
 after_success:
     - coveralls

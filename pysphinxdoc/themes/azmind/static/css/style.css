@@ -340,14 +340,22 @@ div.topic, .documentation-contents {
 
 div.sphx-glr-footer {
     margin-top: 50px;
-    max-width: 100%;
-    margin-left: 0%;
-    margin-right: 0%;
-    margin-left: 40%;
 }
 
 div.sphx-glr-download {
-    max-width: 100%;
+    max-width: 40%;
+}
+
+div.sphx-glr-download-link-note {
+    padding-left: 1em;
+    background-color: #fffbe8;
+    color: #aF8A4B;
+    border: 1px solid #FBEED5;
+}
+
+div.sphx-glr-download-link-note>p.admonition-title {
+    font-weight: bold;
+    margin-bottom: 0;
 }
 
 pre {
@@ -679,6 +687,47 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 .section-6-social a:hover, 
 .section-6-social a:focus { background: #ccc; background: rgba(255, 255, 255, 0.5); border: 0; color: #555; }
 
+/***** Search *****/
+
+.my-search-bar {
+  position: relative;
+}
+
+.my-search-bar .icon {
+  position: absolute;
+  top: 47%;
+  left: 10px;
+  transform: translateY(-50%);
+}
+
+#my-search {
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#my-search-entries {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#my-search-entries li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#my-search-entries li a:hover:not(.header) {
+  background-color: #eee;
+}
 
 /***** Footer *****/
 

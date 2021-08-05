@@ -1,4 +1,4 @@
-# Compiled source #
+﻿# Compiled source #
 ###################
 *.o
 *.so
@@ -14,5 +14,7 @@
 ###########
 build/
 dist/
-pyconnectomist.egg-info/
+pysphinxdoc.egg-info/
 __pycache__/
+tmp/
+

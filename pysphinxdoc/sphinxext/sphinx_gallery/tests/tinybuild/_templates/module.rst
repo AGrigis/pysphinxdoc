@@ -1,5 +1,5 @@
 .. Please when editing this file make sure to keep it matching the
-   docs in ../advanced_configuration.rst:reference_to_examples
+   docs in ../configuration.rst:reference_to_examples
 
 {{ fullname }}
 {{ underline }}
@@ -16,11 +16,10 @@
 
    .. autofunction:: {{ item }}
 
-   .. include:: backreferences/{{fullname}}.{{item}}.examples
+   .. _sphx_glr_backref_{{fullname}}.{{item}}:
 
-   .. raw:: html
-
-	       <div style='clear:both'></div>
+   .. minigallery:: {{fullname}}.{{item}}
+       :add-heading:
 
    {%- endfor %}
    {% endif %}
@@ -35,6 +34,11 @@
    {% for item in classes %}
    .. autoclass:: {{ item }}
       :members:
+
+   .. _sphx_glr_backref_{{fullname}}.{{item}}:
+
+   .. minigallery:: {{fullname}}.{{item}}
+       :add-heading:
 
    {%- endfor %}
    {% endif %}

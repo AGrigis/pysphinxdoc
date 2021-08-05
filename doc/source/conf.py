@@ -11,20 +11,7 @@
 import sys
 import os
 from distutils.version import LooseVersion
-import subprocess
 import sphinx
-
-
-installdir = os.path.abspath("../..")
-env = os.environ
-if "PYTHONPATH" in env:
-    env["PYTHONPATH"] = env["PYTHONPATH"] + ":" + installdir
-else:
-    env["PYTHONPATH"] = installdir
-cmd = ["python", os.path.join(installdir, "pysphinxdoc", "sphinxdoc"), "-v 2", "-p",  installdir, "-n", "pysphinxdoc", "-o", ".."]
-subprocess.check_call(cmd, env=env)
-sys.path.insert(0, installdir)
-
 
 if LooseVersion(sphinx.__version__) < LooseVersion("1"):
     raise RuntimeError("Need sphinx >= 1 for autodoc to work correctly.")
@@ -37,7 +24,7 @@ else:
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here.
-sys.path.insert(0, os.path.join(installdir, "pysphinxdoc", "sphinxext"))
+sys.path.insert(0, os.path.join("/home/ag239446/git/pysphinxdoc/pysphinxdoc", "sphinxext"))
 
 # Add any Sphinx extension module names here, as strings.
 # They can be extensions
@@ -63,17 +50,19 @@ sphinx_gallery_conf = {
     "doc_module": "pysphinxdoc",
     "backreferences_dir": os.path.join("generated", "gallery"),
     "examples_dirs": os.path.join(os.pardir, "examples"),
-    "gallery_dirs": "auto_gallery"}
+    "gallery_dirs": "auto_gallery",
+    "reference_url": {"pysphinxdoc": None}}
 
 # Remove some numpy-linked warnings
 numpydoc_show_class_members = False
 
 # generate autosummary even if no references
 autosummary_generate = True
+autoclass_content = "both"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [
-    os.path.join(installdir, "pysphinxdoc", "templates"),
+    os.path.join("/home/ag239446/git/pysphinxdoc/pysphinxdoc", "templates"),
     os.path.join("generated", "_templates")]
 
 # The suffix of source filenames.
@@ -87,14 +76,14 @@ master_doc = "index"
 
 # General information about the project.
 project = u"pysphinxdoc"
-copyright = u"""2019, pysphinxdoc developers <antoine.grigis@cea.fr>"""
+copyright = u"""2021, pysphinxdoc developers <antoine.grigis@cea.fr>"""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = "1.1.0"
+version = "1.1.3"
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -163,7 +152,7 @@ html_theme_options = {
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = [
-    os.path.join(installdir, "pysphinxdoc", "themes")]
+    os.path.join("/home/ag239446/git/pysphinxdoc/pysphinxdoc", "themes")]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -185,7 +174,7 @@ html_short_title = "pysphinxdoc"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = [
-    "_static"]
+    os.path.join("/home/ag239446/git/pysphinxdoc/doc/source", "_static")]
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

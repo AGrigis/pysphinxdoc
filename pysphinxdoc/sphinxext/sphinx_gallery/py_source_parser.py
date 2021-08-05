@@ -7,9 +7,20 @@ Parser for python source files
 # Author: Óscar Nájera
 
 from __future__ import division, absolute_import, print_function
+
+import codecs
 import ast
+from distutils.version import LooseVersion
+from io import BytesIO
 import re
+import sys
+import tokenize
 from textwrap import dedent
+
+from sphinx.errors import ExtensionError
+from .sphinx_compatibility import getLogger
+
+logger = getLogger('sphinx-gallery')
 
 SYNTAX_ERROR_DOCSTRING = """
 SyntaxError
@@ -18,89 +29,117 @@ SyntaxError
 Example script with invalid Python syntax
 """
 
+# The pattern for in-file config comments is designed to not greedily match
+# newlines at the start and end, except for one newline at the end. This
+# ensures that the matched pattern can be removed from the code without
+# changing the block structure; i.e. empty newlines are preserved, e.g. in
+#
+#     a = 1
+#
+#     # sphinx_gallery_thumbnail_number = 2
+#
+#     b = 2
+INFILE_CONFIG_PATTERN = re.compile(
+    r"^[\ \t]*#\s*sphinx_gallery_([A-Za-z0-9_]+)(\s*=\s*(.+))?[\ \t]*\n?",
+    re.MULTILINE)
 
-def get_docstring_and_rest(filename):
-    """Separate `filename` content between docstring and the rest
+
+def parse_source_file(filename):
+    """Parse source file into AST node.
+
+    Parameters
+    ----------
+    filename : str
+        File path
+
+    Returns
+    -------
+    node : AST node
+    content : utf-8 encoded string
+    """
+    with codecs.open(filename, 'r', 'utf-8') as fid:
+        content = fid.read()
+    # change from Windows format to UNIX for uniformity
+    content = content.replace('\r\n', '\n')
+
+    try:
+        node = ast.parse(content)
+        return node, content
+    except SyntaxError:
+        return None, content
+
+
+def _get_docstring_and_rest(filename):
+    """Separate ``filename`` content between docstring and the rest.
 
     Strongly inspired from ast.get_docstring.
 
     Returns
     -------
-    docstring: str
-        docstring of `filename`
-    rest: str
-        `filename` content without the docstring
+    docstring : str
+        docstring of ``filename``
+    rest : str
+        ``filename`` content without the docstring
+    lineno : int
+        The line number.
+    node : ast Node
+        The node.
     """
-    # can't use codecs.open(filename, 'r', 'utf-8') here b/c ast doesn't
-    # seem to work with unicode strings in Python2.7
-    # "SyntaxError: encoding declaration in Unicode string"
-    with open(filename, 'rb') as fid:
-        content = fid.read()
-    # change from Windows format to UNIX for uniformity
-    content = content.replace(b'\r\n', b'\n')
+    node, content = parse_source_file(filename)
 
-    try:
-        node = ast.parse(content)
-    except SyntaxError:
-        return SYNTAX_ERROR_DOCSTRING, content.decode('utf-8'), 1
+    if node is None:
+        return SYNTAX_ERROR_DOCSTRING, content, 1, node
 
     if not isinstance(node, ast.Module):
-        raise TypeError("This function only supports modules. "
-                        "You provided {0}".format(node.__class__.__name__))
-    try:
-        # in python 3.7 module knows it's docstring
-        # everything else will raise an attribute error
-        docstring = node.docstring
+        raise ExtensionError("This function only supports modules. "
+                             "You provided {0}"
+                             .format(node.__class__.__name__))
+    if not (node.body and isinstance(node.body[0], ast.Expr) and
+            isinstance(node.body[0].value, ast.Str)):
+        raise ExtensionError(
+            'Could not find docstring in file "{0}". '
+            'A docstring is required by sphinx-gallery '
+            'unless the file is ignored by "ignore_pattern"'
+            .format(filename))
 
-        import tokenize
-        from io import BytesIO
-        ts = tokenize.tokenize(BytesIO(content).readline)
-        ds_lines = 0
-        # find the first string according to the tokenizer and get
-        # it's end row
+    if LooseVersion(sys.version) >= LooseVersion('3.7'):
+        docstring = ast.get_docstring(node)
+        assert docstring is not None  # should be guaranteed above
+        # This is just for backward compat
+        if len(node.body[0].value.s) and node.body[0].value.s[0] == '\n':
+            # just for strict backward compat here
+            docstring = '\n' + docstring
+        ts = tokenize.tokenize(BytesIO(content.encode()).readline)
+        # find the first string according to the tokenizer and get its end row
         for tk in ts:
             if tk.exact_type == 3:
-                ds_lines, _ = tk.end
+                lineno, _ = tk.end
                 break
-        # grab the rest of the file
-        rest = '\n'.join(content.decode('utf-8').split('\n')[ds_lines:])
-        lineno = ds_lines + 1
-
-    except AttributeError:
-        # this block can be removed when python 3.6 support is dropped
-        if node.body and isinstance(node.body[0], ast.Expr) and \
-           isinstance(node.body[0].value, ast.Str):
-            docstring_node = node.body[0]
-            docstring = docstring_node.value.s
-            if hasattr(docstring, 'decode'):  # python2.7
-                docstring = docstring.decode('utf-8')
-            lineno = docstring_node.lineno  # The last line of the string.
-            # This get the content of the file after the docstring last line
-            # Note: 'maxsplit' argument is not a keyword argument in python2
-            rest = content.decode('utf-8').split('\n', lineno)[-1]
-            lineno += 1
         else:
-            docstring, rest = '', ''
+            lineno = 0
+    else:
+        # this block can be removed when python 3.6 support is dropped
+        docstring_node = node.body[0]
+        docstring = docstring_node.value.s
+        lineno = docstring_node.lineno  # The last line of the string.
 
-    if not docstring:
-        raise ValueError(('Could not find docstring in file "{0}". '
-                          'A docstring is required by sphinx-gallery')
-                         .format(filename))
-    return docstring, rest, lineno
+    # This get the content of the file after the docstring last line
+    # Note: 'maxsplit' argument is not a keyword argument in python2
+    rest = '\n'.join(content.split('\n')[lineno:])
+    lineno += 1
+    return docstring, rest, lineno, node
 
 
 def extract_file_config(content):
     """
     Pull out the file-specific config specified in the docstring.
     """
-
-    prop_pat = re.compile(
-        r"^\s*#\s*sphinx_gallery_([A-Za-z0-9_]+)\s*=\s*(.+)\s*$",
-        re.MULTILINE)
     file_conf = {}
-    for match in re.finditer(prop_pat, content):
+    for match in re.finditer(INFILE_CONFIG_PATTERN, content):
         name = match.group(1)
-        value = match.group(2)
+        value = match.group(3)
+        if value is None:  # a flag rather than a config setting
+            continue
         try:
             value = ast.literal_eval(value)
         except (SyntaxError, ValueError):
@@ -112,25 +151,36 @@ def extract_file_config(content):
     return file_conf
 
 
-def split_code_and_text_blocks(source_file):
+def split_code_and_text_blocks(source_file, return_node=False):
     """Return list with source file separated into code and text blocks.
+
+    Parameters
+    ----------
+    source_file : str
+        Path to the source file.
+    return_node : bool
+        If True, return the ast node.
 
     Returns
     -------
     file_conf : dict
-        File-specific settings given in comments as:
-        # sphinx_gallery_<name> = <value>
-    blocks : list of (label, content)
+        File-specific settings given in source file comments as:
+        ``# sphinx_gallery_<name> = <value>``
+    blocks : list
+        (label, content, line_number)
         List where each element is a tuple with the label ('text' or 'code'),
-        and content string of block.
+        the corresponding content string of block and the leading line number
+    node : ast Node
+        The parsed node.
     """
-    docstring, rest_of_content, lineno = get_docstring_and_rest(source_file)
+    docstring, rest_of_content, lineno, node = _get_docstring_and_rest(
+        source_file)
     blocks = [('text', docstring, 1)]
 
     file_conf = extract_file_config(rest_of_content)
 
     pattern = re.compile(
-        r'(?P<header_line>^#{20,}.*)\s(?P<text_content>(?:^#.*\s)*)',
+        r'(?P<header_line>^#{20,}.*|^# ?%%.*)\s(?P<text_content>(?:^#.*\s?)*)',
         flags=re.M)
     sub_pat = re.compile('^#', flags=re.M)
 
@@ -154,4 +204,23 @@ def split_code_and_text_blocks(source_file):
     if remaining_content.strip():
         blocks.append(('code', remaining_content, lineno))
 
-    return file_conf, blocks
+    out = (file_conf, blocks)
+    if return_node:
+        out += (node,)
+    return out
+
+
+def remove_config_comments(code_block):
+    """
+    Return the content of *code_block* with in-file config comments removed.
+
+    Comment lines of the pattern '# sphinx_gallery_[option] = [val]' are
+    removed, but surrounding empty lines are preserved.
+
+    Parameters
+    ----------
+    code_block : str
+        A code segment.
+    """
+    parsed_code, _ = re.subn(INFILE_CONFIG_PATTERN, '', code_block)
+    return parsed_code

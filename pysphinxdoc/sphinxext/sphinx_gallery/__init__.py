@@ -4,7 +4,9 @@ Sphinx Gallery
 
 """
 import os
-__version__ = '0.1.13'
+# dev versions should have "dev" in them, stable should not.
+# doc/conf.py makes use of this to set the version drop-down.
+__version__ = '0.9.0'
 
 
 def glr_path_static():

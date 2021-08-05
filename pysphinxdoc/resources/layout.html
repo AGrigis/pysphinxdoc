@@ -19,6 +19,7 @@
         <link rel="stylesheet" href="{{ pathto('_static/css/jquery.mosaic.css', 1)}}">
         <link rel="stylesheet" href="{{ pathto('_static/gallery.css', 1)}}">
         <link rel="stylesheet" href="{{ pathto('_static/css/media-queries.css', 1)}}">
+        <link rel="stylesheet" href="{{ pathto('_static/css/pygment.css', 1)}}">
 
         <!-- Favicon and touch icons -->
         <link rel="shortcut icon" href="{{ pathto('_static/ico/favicon.png', 1)}}">
@@ -76,10 +77,13 @@
 						<a href="{{pathto('generated/installation')}}"><i class="fas fa-cog"></i> Installation</a>
 					</li>
 					<li>
-						<a href="{{pathto('auto_gallery/gallery')}}"><i class="fas fa-eye"></i> Gallery</a>
+						<a href="{{pathto('auto_gallery/index')}}"><i class="fas fa-eye"></i> Gallery</a>
 					</li>
 					<li>
 						<a href="{{pathto('generated/documentation')}}"><i class="fas fa-pencil-alt"></i> API documentation</a>
+					</li>
+					<li>
+						<a href="{{pathto('generated/search')}}"><i class="fas fa-search"></i> Search</a>
 					</li>
 					<li>
 						<a href="%(EXTRAURL)s"><i class="fas fa-external-link-alt"></i> %(EXTRANAME)s</a>
@@ -91,19 +95,24 @@
 						<ul class="collapse list-unstyled" id="otherSections">
                             %(LINKS)s
                             {% if localtoc != "" %}
-                                <li>SECTIONS</li>
+                                {% set valid_refs = [] %}
                                 {% for element in localtoc %}
                                     {% for part in element.split("#") %}
                                         {% set el = part.split("%") %}
                                         {% set url = el[0] | trim | safe %}
                                         {% set entry = el[1] | trim | safe %}
                                         {%- if url != '#' and url != '' %}
-							            <li>
-								            <a href="#{{url}}">{{entry | title}}</a>
-							            </li>
+                                            {% set link = ["<a href='#", url, "'>", entry|title, "</a>"]|join("") %}
+                                            {% set valid_refs = valid_refs.append(link)  %}
                                         {%- endif %}
                                     {% endfor %}
                                 {% endfor %}
+                                {% if valid_refs|length > 0 %}
+                                    <li>SECTIONS</li>
+                                    {% for element in valid_refs %}
+						                <li> {{element | safe}} </li>                                    
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
                             <li>API</li>
                             %(SECTIONS)s
@@ -169,7 +178,7 @@
 			            </div>
 			            <div class="row">
 			            	<div class="col section-bottom-button wow fadeInUp">
-		                        <a class="btn btn-primary btn-customized" href="{{pathto('auto_gallery/gallery')}}" role="button">
+		                        <a class="btn btn-primary btn-customized" href="{{pathto('auto_gallery/index')}}" role="button">
 				            		<i class="fas fa-sync"></i> View More
 				            	</a>
 			            	</div>
@@ -235,6 +244,7 @@
         <script src="{{ pathto('_static/js/jquery.mCustomScrollbar.concat.min.js', 1)}}"></script>
         <script src="{{ pathto('_static/js/scripts.js', 1)}}"></script>
         <script src="{{ pathto('_static/js/jquery.mosaic.js', 1)}}"></script>
+        <script src="{{ pathto('_static/js/search.js', 1)}}"></script>
         <script type="text/javascript">
 	        $('.top-content').backstretch("{{ pathto('_static/img/backgrounds/1.jpg', 1)}}");
             $('.section-4-container').backstretch("{{ pathto('_static/img/backgrounds/2.jpg', 1)}}");

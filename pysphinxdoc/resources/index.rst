@@ -10,4 +10,5 @@
 
     generated/installation
     generated/documentation
+    generated/search
 

@@ -11,21 +11,21 @@ import sys
 
 import pytest
 
+from sphinx.errors import ExtensionError
 import sphinx_gallery.docs_resolv as sg
-from sphinx_gallery.utils import _TempDir
 
 
 def test_embed_code_links_get_data():
     """Test that we can get data for code links."""
-    sg._get_data('http://docs.scipy.org/doc/scipy/reference')
+    sg._get_data('https://numpy.org/doc/1.18/reference')
     sg._get_data('http://scikit-learn.org/stable/')  # GZip
 
 
-def test_shelve():
+def test_shelve(tmpdir):
     """Test if shelve can be caches information
     retrieved after file is deleted"""
     test_string = 'test information'
-    tmp_cache = _TempDir()
+    tmp_cache = str(tmpdir)
     with tempfile.NamedTemporaryFile('w', delete=False) as f:
         f.write(test_string)
     try:
@@ -41,8 +41,7 @@ def test_shelve():
 
     # shelve keys need to be str in python 2, deal with unicode input
     if sys.version_info[0] == 2:
-        unicode_name = unicode(f.name)
-        assert sg.get_data(unicode_name, tmp_cache) == test_string
+        assert sg.get_data(f.name, tmp_cache) == test_string
 
 
 def test_parse_sphinx_docopts():
@@ -67,11 +66,32 @@ def test_parse_sphinx_docopts():
         'SOURCELINK_SUFFIX': '.txt'
     }
 
-    with pytest.raises(ValueError):
+    data_sphinx_175 = '''
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT: document.getElementById("documentation_options")\
+                  .getAttribute('data-url_root'),
+        VERSION:     '2.0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    '''
+    assert sg.parse_sphinx_docopts(data_sphinx_175) == {
+        'VERSION': '2.0.2',
+        'COLLAPSE_INDEX': False,
+        'FILE_SUFFIX': '.html',
+        'HAS_SOURCE': True,
+        'SOURCELINK_SUFFIX': '.txt'
+    }
+
+    with pytest.raises(ExtensionError):
         sg.parse_sphinx_docopts('empty input')
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ExtensionError):
         sg.parse_sphinx_docopts('DOCUMENTATION_OPTIONS = ')
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ExtensionError):
         sg.parse_sphinx_docopts('DOCUMENTATION_OPTIONS = {')

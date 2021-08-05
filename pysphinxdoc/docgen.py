@@ -1,5 +1,5 @@
 ##########################################################################
-# pysphinxdoc - Copyright (C) AGrigis, 2016
+# pysphinxdoc - Copyright (C) AGrigis, 2016 - 2021
 # Distributed under the terms of the CeCILL-B license, as published by
 # the CEA-CNRS-INRIA. Refer to the LICENSE file or to
 # http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
@@ -462,6 +462,54 @@ class DocHelperWriter(object):
                         w("          `{0} <{1}.html>`_\n\n".format(
                             path, rpath))
             w("\n")
+
+    def write_search(self):
+        """ Generate the search page.
+        """
+        # Welcome message
+        if self.verbose > 0:
+            print("[info] Generating search page in {0}.".format(
+                self.generateddir))
+
+        # Get full output filename path
+        path = os.path.join(self.generateddir, "search" + self.rst_extension)
+
+        # Start writing the documentation index
+        if self.verbose > 1:
+            print("[debug] Generating file {0}.".format(path))
+        with open(path, "wt") as open_file:
+            w = open_file.write
+
+            # Header
+            w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
+            title = "Search in API documentation of {0}\n".format(
+                self.root_module_name.upper())
+            w(title)
+            w(self.rst_section_levels[1] * len(title) + "\n\n")
+
+            # Search
+            w(".. raw:: html\n\n")
+            w("    <!-- Block section -->\n\n")
+            w("    <div class='my-search-bar'>\n")
+            w("    <i class='icon fa fa-search'></i>\n")
+            w("    <input type='text' id='my-search' onkeyup='mySearch()' "
+              "placeholder='Search for functions & classes...' title='Search'>"
+              "\n\n")
+            w("    </div>\n")
+            w("    <ul id='my-search-entries'>\n")
+            entries = []
+            for module_name, submodule_item in self.module_members.items():
+                for _, submod_members in submodule_item.items():
+                    kdata = submod_members["classes"]
+                    fdata = submod_members["functions"]
+                    for klass, (rklass, _) in kdata.items():
+                        entries.append((klass, rklass + ".html"))
+                    for func, (rfunc, _) in fdata.items():
+                        entries.append((func, rfunc + ".html"))
+            entries = sorted(entries, key=lambda item: item[0])
+            for name, url in entries:
+                w("        <li><a href='{0}'>{1}</a></li>\n".format(url, name))
+            w("    </ul>\n")
 
     def generate_documentation_index_entry(self, module_name, indent=4):
         """ Generate a new entry in the dicumentation index.

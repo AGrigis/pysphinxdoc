@@ -103,6 +103,7 @@ PROVIDES = ["pysphinxdoc"]
 REQUIRES = [
     "sphinx>=1.0",
     "matplotlib",
-    "mock"
+    "mock",
+    "memory-profiler"
 ]
 EXTRA_REQUIRES = {}

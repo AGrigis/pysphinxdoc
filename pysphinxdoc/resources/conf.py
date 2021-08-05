@@ -51,6 +51,7 @@ sphinx_gallery_conf = {
     "backreferences_dir": os.path.join("generated", "gallery"),
     "examples_dirs": os.path.join(os.pardir, "examples"),
     "gallery_dirs": "auto_gallery",
+    "show_memory": True,
     "reference_url": {"%(MODULE)s": None}}
 
 # Remove some numpy-linked warnings

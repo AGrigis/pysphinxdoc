@@ -33,6 +33,7 @@ pkgdata = {
         "themes/*/static/img/*.png",
         "themes/*/static/img/*.jpg",
         "themes/*/static/img/backgrounds/*.jpg",
+        "themes/*/static/img/backgrounds/*.png",
         "themes/*/static/ico/*.png"],
 }
 scripts = [

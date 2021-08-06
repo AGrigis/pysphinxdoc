@@ -567,7 +567,6 @@ class DocHelperWriter(object):
         unique_functions = set()
         unique_classes = set()
         members = {"classes": classes, "functions": funcs}
-        pprint(members)
         for name, struct in members.items():
             _struct = {}
             for key, val in struct.items():
@@ -585,6 +584,13 @@ class DocHelperWriter(object):
                 _struct[mkey] = val
             members[name] = collections.OrderedDict(sorted(_struct.items()))
         return members, unique_functions, unique_classes
+
+    def getalias(self, members, alias_map):
+        """ Return all the object alias within a module.
+        """
+        for key in ("functions", "classes"):
+            for path, (rpath, _) in members[key].items():
+                alias_map.setdefault(rpath, set()).add(path)
 
     def write_api_docs(self, indent=4):
         """ Generate API reST files.
@@ -610,8 +616,10 @@ class DocHelperWriter(object):
             importlib.import_module(module_name)
             module = sys.modules[module_name]
             mod_members = {}
+            alias_map = {}
             members, unique_functions, unique_classes = self.getmembers(module)
             mod_members[module_name] = members
+            self.getalias(members, alias_map)
             description = module.__doc__ or ""
 
             # List all sub modules
@@ -630,11 +638,14 @@ class DocHelperWriter(object):
                     members, sub_functions, sub_classes = self.getmembers(
                         submodule)
                     mod_members[submodule_name] = members
+                    self.getalias(members, alias_map)
                     unique_functions = unique_functions.union(sub_functions)
                     unique_classes = unique_classes.union(sub_classes)
                     subdescription = submodule.__doc__ or ""
                     submodules_list.append((submodule_name, subdescription))
             self.module_members[module_name] = mod_members
+            pprint(mod_members)
+            pprint(alias_map)
 
             # Write module & submodule API doc to file
             if self.verbose > 1:
@@ -660,7 +671,9 @@ class DocHelperWriter(object):
                       "<sphx_glr_auto_gallery>` for the big picture.\n\n")
                     w(".. autoclass:: {0}\n".format(klass))
                     w("     :members:\n\n")
-                    w(".. minigallery:: {0}\n".format(klass))
+                    w(".. minigallery:: {0}\n".format(
+                        " ".join(alias_map[klass])
+                        if klass in alias_map else klass))
                     w("    :add-heading: Examples\n")
                     w("    :heading-level: -\n\n")
             for func in unique_functions:
@@ -680,7 +693,9 @@ class DocHelperWriter(object):
                       "it. Please refer to the :ref:`gallery "
                       "<sphx_glr_auto_gallery>` for the big picture.\n\n")
                     w(".. autofunction:: {0}\n\n".format(func))
-                    w(".. minigallery:: {0}\n".format(func))
+                    w(".. minigallery:: {0}\n".format(
+                        " ".join(alias_map[func])
+                        if func in alias_map else func))
                     w("    :add-heading: Examples\n")
                     w("    :heading-level: -\n\n")
 

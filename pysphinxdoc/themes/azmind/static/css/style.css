@@ -3,6 +3,11 @@ body { font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 300; col
 
 strong { font-weight: 500; }
 
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 a { color: #f35b3f; border-bottom: 1px dashed #f35b3f; text-decoration: none; transition: all .3s; }
 a:hover, a:focus { color: #f35b3f; border: 0; text-decoration: none; }
 
@@ -52,8 +57,7 @@ img { max-width: 100%; }
   margin: 0
 }
 .field-list dt {
-  float: left;
-  width: 20%;
+  font-weight: 500 !important;
   padding: 0  !important;
   margin: 0  !important;
   margin-top: 1em !important;
@@ -63,14 +67,17 @@ img { max-width: 100%; }
   border: none !important;
 }
 .field-list dd {
-  float: left;
-  width: 80%;
   border-left: 3px solid !important;
-  background: #FFF8DC !important;
+  /* background: #FFF8DC !important; */
   padding: 0 !important;
   margin: 0 !important;
   margin-top: 1em !important;
   padding-left: 1em !important;
+    margin-left: 30px !important;
+}
+.field-list blockquote {
+    margin: 0;
+    padding-left: 20px;
 }
 
 
@@ -311,13 +318,27 @@ div.section h2:hover {
     transition-duration: 1s;
 }
 
-div.topic, .documentation-contents {
+div.topic, .documentation-contents, div.admonition {
     margin-top: 10px;
+    margin-bottom: 10px;
     text-align: left;
     padding-left: 1em;
     background-color: #fffbe8;
     color: #aF8A4B;
     border: 1px solid #FBEED5;
+}
+
+.admonition-title {
+    font-weight: 500;
+}
+
+.rubric {
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.sphx-glr-timing {
+    margin-top: 30px!important;
 }
 
 .sphx-glr-thumbcontainer {
@@ -528,7 +549,7 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 
 /***** General style, all sections *****/
 
-.section-container { margin: 0 auto; padding-bottom: 80px; }
+.section-container { margin: 0 auto; padding-bottom: 0; }
 
 .section-container-gray-bg { background: #f8f8f8; }
 
@@ -538,7 +559,7 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 
 .section-container-image-bg .divider-1 span { border-color: #fff; border-color: rgba(255, 255, 255, 0.8); }
 
-.section-description { margin-top: 60px; padding-bottom: 10px; }
+.section-description { margin-top: 35px; padding-bottom: 10px; }
 
 .section-description p { margin-top: 20px; padding: 0 120px; }
 .section-container-image-bg .section-description p { opacity: 0.8; }
@@ -553,7 +574,7 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 
 /***** Top content *****/
 
-.top-content { width: 100%; padding: 60px 0 120px 0; }
+.top-content { width: 100%; padding: 0 0 0 0; }
 
 .top-content h1 { padding-top: 60px; color: #fff; }
 .top-content .description { margin: 30px 0 0 0; padding-bottom: 30px; }
@@ -626,9 +647,23 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 
 /***** Section 6 *****/
 
-.section-6-box { padding-top: 30px; text-align: left; }
+.section-6-box {
+    margin-bottom: 10px;
+}
 
-.section-6-box h3 { margin-top: 0; }
+.section-6-box {
+    padding-top: 10px;
+    text-align: left;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.section-6-box h3 {
+    margin-top: 0;
+    position: relative;
+    float: left;
+    top: 35%;
+    padding-right: 20px;
+}
 
 /* contact form */
 .section-6-form { padding-top: 20px; text-align: left; }
@@ -678,11 +713,18 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 .section-6-form button.btn-customized i { margin-right: 5px; }
 /* end contact form */
 
-.section-6-social { padding-top: 20px; }
+.section-6-social {
+    padding-top: 20px; 
+    position: relative;
+    float: left;
+}
 
 .section-6-social a {
 	display: inline-block; width: 46px; height: 46px; margin: 0 10px 10px 0; 
 	background: #fff; border: 0; border-radius: 50%; color: #555; text-align: center; line-height: 46px;
+}
+.section-6-social p {
+	display: inline-block; margin: 0 10px 10px 0; text-align: center; line-height: 46px;
 }
 .section-6-social a:hover, 
 .section-6-social a:focus { background: #ccc; background: rgba(255, 255, 255, 0.5); border: 0; color: #555; }

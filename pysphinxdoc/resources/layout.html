@@ -214,15 +214,10 @@
 									<a href="https://www.youtube.com/CEASaclay"><i class="fab fa-youtube"></i></a>
 									<a href="https://twitter.com/neurospin_91"><i class="fab fa-twitter"></i></a>
 									<a href="https://github.com/AGrigis/pysphinxdoc"><i class="fab fa-github"></i></a>
+                                    <p>&copy; {{copyright}}</p>
 		                    	</div>
 		                    </div>
 			            </div>
-			        	<div class="row">
-		                    <div class="col">
-                                &copy; {{copyright}}. <br/>
-                                Inspired by <a href="https://azmind.com/demo/bootstrap-4-sidebar-menu/">AZMIND template</a>.
-		                    </div>
-		                </div>
 			        </div>
                 </div>
                 {%- endblock %}
@@ -246,9 +241,8 @@
         <script src="{{ pathto('_static/js/jquery.mosaic.js', 1)}}"></script>
         <script src="{{ pathto('_static/js/search.js', 1)}}"></script>
         <script type="text/javascript">
-	        $('.top-content').backstretch("{{ pathto('_static/img/backgrounds/1.jpg', 1)}}");
-            $('.section-4-container').backstretch("{{ pathto('_static/img/backgrounds/2.jpg', 1)}}");
-            $('.section-6-container').backstretch("{{ pathto('_static/img/backgrounds/1.jpg', 1)}}");
+	        $('.top-content').backstretch("{{ pathto('_static/img/backgrounds/banner1.png', 1)}}");
+            $('.section-6-container').backstretch("{{ pathto('_static/img/backgrounds/footer1.png', 1)}}");
         </script>
         {%- if pagename == 'index' %}
         <script>

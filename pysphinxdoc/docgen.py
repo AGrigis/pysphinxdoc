@@ -30,6 +30,10 @@ from .utils import examplify
 
 class DocHelperWriter(object):
     """ A basic class to create the Sphinx complient documentation of a module.
+
+    .. note::
+
+        Please use directly the ``sphinxdoc`` script.
     """
     mandatory_fields = {
         "NAME": "the name of the module",
@@ -523,7 +527,7 @@ class DocHelperWriter(object):
 
         Returns
         -------
-        ad : string
+        ad: string
             the reST formated index description.
         """
         # Try to get the module description
@@ -649,9 +653,16 @@ class DocHelperWriter(object):
                     # not be edited
                     w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
                     w(":orphan:\n\n")
-
+                    w(".. note::\n\n")
+                    w("     This page is a reference documentation. It only "
+                      "explains the class signature, and not how to use "
+                      "it. Please refer to the :ref:`gallery "
+                      "<sphx_glr_auto_gallery>` for the big picture.\n\n")
                     w(".. autoclass:: {0}\n".format(klass))
                     w("     :members:\n\n")
+                    w(".. minigallery:: {0}\n".format(klass))
+                    w("    :add-heading: Examples\n")
+                    w("    :heading-level: -\n\n")
             for func in unique_functions:
                 outfile = os.path.join(outdir, func + self.rst_extension)
                 if self.verbose > 1:
@@ -663,8 +674,15 @@ class DocHelperWriter(object):
                     # not be edited
                     w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
                     w(":orphan:\n\n")
-
+                    w(".. note::\n\n")
+                    w("    This page is a reference documentation. It only "
+                      "explains the function signature, and not how to use "
+                      "it. Please refer to the :ref:`gallery "
+                      "<sphx_glr_auto_gallery>` for the big picture.\n\n")
                     w(".. autofunction:: {0}\n\n".format(func))
+                    w(".. minigallery:: {0}\n".format(func))
+                    w("    :add-heading: Examples\n")
+                    w("    :heading-level: -\n\n")
 
             # Write module index to file
             outfile = os.path.join(outdir, module_name + self.rst_extension)

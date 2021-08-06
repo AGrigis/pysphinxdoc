@@ -56,3 +56,18 @@ def examplify(filename, outfile):
     # Write
     with open(outfile, "wt") as openfile:
         openfile.write(buf)
+
+
+def dummy():
+    """ A simple test function.
+
+    See Also
+    --------
+    pysphinxdoc.docgen.DocHelperWriter, examplify
+
+    Examples
+    --------
+    >>> from pysphinxdoc.utils import dummy
+    >>> dummy()
+    """
+    print("OK")

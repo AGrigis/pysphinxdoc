@@ -63,7 +63,9 @@ sphinx_gallery_conf = {
     "doc_module": "pysphinxdoc",
     "backreferences_dir": os.path.join("generated", "gallery"),
     "examples_dirs": os.path.join(os.pardir, "examples"),
-    "gallery_dirs": "auto_gallery"}
+    "gallery_dirs": "auto_gallery",
+    "show_memory": True,
+    "reference_url": {"pysphinxdoc": None}}
 
 # Remove some numpy-linked warnings
 numpydoc_show_class_members = False

@@ -200,6 +200,8 @@ class NumpyDocString(collections.Mapping):
             header = r.read().strip()
             if ' : ' in header:
                 arg_name, arg_type = header.split(' : ')[:2]
+            elif ': ' in header:
+                arg_name, arg_type = header.split(': ')[:2]
             else:
                 arg_name, arg_type = header, ''
 

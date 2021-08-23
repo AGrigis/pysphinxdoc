@@ -657,13 +657,6 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
     flex: 0 0 100%;
     max-width: 100%;
 }
-.section-6-box h3 {
-    margin-top: 0;
-    position: relative;
-    float: left;
-    top: 35%;
-    padding-right: 20px;
-}
 
 /* contact form */
 .section-6-form { padding-top: 20px; text-align: left; }
@@ -713,10 +706,19 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 .section-6-form button.btn-customized i { margin-right: 5px; }
 /* end contact form */
 
+.section-6-title {
+    margin-top: 0;
+    position: relative;
+    float: left;
+    top: 35%;
+    width: 15%;
+}
+
 .section-6-social {
     padding-top: 20px; 
     position: relative;
     float: left;
+    width:85%;
 }
 
 .section-6-social a {
@@ -751,6 +753,7 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 }
 
 #my-search-entries {
+  overflow-wrap: break-word;
   list-style-type: none;
   padding: 0;
   margin: 0;

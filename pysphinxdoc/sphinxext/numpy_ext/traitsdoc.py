@@ -16,10 +16,14 @@ docstring-standard
 """
 from __future__ import division, absolute_import, print_function
 
+import sys
 import inspect
 import os
 import pydoc
-import collections
+if sys.version_info < (3, 10):
+    from collections import Callable
+else:
+    from collections.abc import Callable
 
 from . import docscrape
 from . import docscrape_sphinx
@@ -126,7 +130,7 @@ def get_doc_object(obj, what=None, config=None):
             what = 'class'
         elif inspect.ismodule(obj):
             what = 'module'
-        elif isinstance(obj, collections.Callable):
+        elif isinstance(obj, Callable):
             what = 'function'
         else:
             what = 'object'

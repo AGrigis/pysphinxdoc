@@ -11,8 +11,12 @@
 """
 from __future__ import division, absolute_import, print_function
 
+import sys
 import warnings
-import collections
+if sys.version_info < (3, 10):
+    from collections import Callable
+else:
+    from collections.abc import Callable
 
 warnings.warn("This extension has been accepted to Sphinx upstream. "
               "Use the version from there (Sphinx >= 1.2) "
@@ -35,7 +39,7 @@ def doctree_read(app, doctree):
     env = app.builder.env
 
     resolve_target = getattr(env.config, 'linkcode_resolve', None)
-    if not isinstance(env.config.linkcode_resolve, collections.Callable):
+    if not isinstance(env.config.linkcode_resolve, Callable):
         raise LinkcodeError(
             "Function `linkcode_resolve` is not given in conf.py")
 

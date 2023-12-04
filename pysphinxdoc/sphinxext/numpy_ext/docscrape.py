@@ -3,12 +3,16 @@
 """
 from __future__ import division, absolute_import, print_function
 
+import sys
 import inspect
 import textwrap
 import re
 import pydoc
 from warnings import warn
-import collections
+if sys.version_info < (3, 10):
+    from collections import Mapping, Callable
+else:
+    from collections.abc import Mapping, Callable
 import sys
 
 
@@ -96,7 +100,7 @@ class ParseError(Exception):
         return message
 
 
-class NumpyDocString(collections.Mapping):
+class NumpyDocString(Mapping):
     def __init__(self, docstring, config={}):
         orig_docstring = docstring
         docstring = textwrap.dedent(docstring).split('\n')
@@ -566,7 +570,7 @@ class ClassDoc(NumpyDocString):
         return [name for name, func in inspect.getmembers(self._cls)
                 if ((not name.startswith('_') or
                     name in self.extra_public_methods) and
-                    isinstance(func, collections.Callable) and
+                    isinstance(func, Callable) and
                     self._is_show_member(name))]
 
     @property

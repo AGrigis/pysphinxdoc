@@ -6,7 +6,10 @@ import inspect
 import textwrap
 import pydoc
 import sphinx
-import collections
+if sys.version_info < (3, 10):
+    from collections import Callable
+else:
+    from collections.abc import Callable
 
 from .docscrape import NumpyDocString, FunctionDoc, ClassDoc
 
@@ -269,7 +272,7 @@ def get_doc_object(obj, what=None, doc=None, config={}):
             what = 'class'
         elif inspect.ismodule(obj):
             what = 'module'
-        elif isinstance(obj, collections.Callable):
+        elif isinstance(obj, Callable):
             what = 'function'
         else:
             what = 'object'

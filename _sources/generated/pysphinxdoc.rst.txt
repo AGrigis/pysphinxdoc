@@ -1,0 +1,37 @@
+.. AUTO-GENERATED FILE -- DO NOT EDIT!
+
+:orphan:
+
+API documentation of *pysphinxdoc*
+===================================
+
+pysphinxdoc
+^^^^^^^^^^^
+
+Pysphinxdoc is a tool for generating automatically API documentation
+for Python modules, based on their reStructuredText docstrings, using the
+`scikit-learn <http://scikit-learn.org/>`_ theme and
+`Sphinx <http://www.sphinx-doc.org/>`_.
+
+pysphinxdoc.docgen
+^^^^^^^^^^^^^^^^^^
+
+Provide a 'DocHelperWriter' class to generate the Sphinx complient
+documentation of a module.
+
+.. rst-class:: documentation-contents
+
+  **Classes**:
+    * `pysphinxdoc.docgen.DocHelperWriter <pysphinxdoc.docgen.DocHelperWriter.html>`_
+
+pysphinxdoc.utils
+^^^^^^^^^^^^^^^^^
+
+Provide usefull functions to interpret a Python code.
+
+.. rst-class:: documentation-contents
+
+  **Functions**:
+    * `pysphinxdoc.utils.dummy <pysphinxdoc.utils.dummy.html>`_
+    * `pysphinxdoc.utils.examplify <pysphinxdoc.utils.examplify.html>`_
+

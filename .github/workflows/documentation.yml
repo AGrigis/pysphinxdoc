@@ -50,6 +50,7 @@ jobs:
         ls source/_static
         ls build/html/_static
         cp -r source/_static/* build/html/_static
+        cp build/html/_static/sg_gallery.css build/html/_static/gallery.css 
         cd ../..
     - name: Upload documentation as an artifact
       uses: actions/upload-artifact@v4

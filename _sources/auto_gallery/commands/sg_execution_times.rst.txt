@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:00.071** total execution time for 1 file **from auto_gallery/commands**:
+**00:00.066** total execution time for 1 file **from auto_gallery/commands**:
 
 .. container::
 
@@ -33,5 +33,5 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_auto_gallery_commands_plot_docgen.py` (``plot_docgen.py``)
-     - 00:00.071
-     - 69.7
+     - 00:00.066
+     - 69.8

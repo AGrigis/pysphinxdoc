@@ -28,10 +28,10 @@ sys.path.insert(0, installdir)
 
 if LooseVersion(sphinx.__version__) < LooseVersion("1"):
     raise RuntimeError("Need sphinx >= 1 for autodoc to work correctly.")
-if LooseVersion(sphinx.__version__) < LooseVersion("1.8"):
-    sphinx_math = "sphinx.ext.pngmath"
-else:
-    sphinx_math = "sphinx.ext.imgmath"
+# if LooseVersion(sphinx.__version__) < LooseVersion("1.8"):
+#     sphinx_math = "sphinx.ext.pngmath"
+# else:
+#     sphinx_math = "sphinx.ext.imgmath"
 
 # -- General configuration --------------------------------------------------
 
@@ -48,7 +48,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    sphinx_math,
+#     sphinx_math,
     "sphinx.ext.ifconfig",
     "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",

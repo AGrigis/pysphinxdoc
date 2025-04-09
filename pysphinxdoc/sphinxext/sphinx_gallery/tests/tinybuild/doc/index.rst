@@ -16,14 +16,16 @@ every module. Examples `here <auto_examples/index.html>`_.
    :toctree: gen_modules/
    :template: module.rst
 
-   gen_gallery
    backreferences
-   gen_rst
-   py_source_parser
+   _dummy
+   _dummy.nested
    docs_resolv
-   notebook
    downloads
-   docs_resolv
+   gen_gallery
+   gen_rst
+   notebook
+   py_source_parser
+   scrapers
    sorting
 
 Examples
@@ -36,3 +38,6 @@ This tests that mini-gallery reference labels work:
    :maxdepth: 2
 
    auto_examples/index.rst
+   auto_examples_with_rst/index.rst
+   auto_examples_rst_index/index.rst
+   auto_examples_README_header/index.rst

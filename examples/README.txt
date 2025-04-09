@@ -1,4 +1,6 @@
-PySphinxDoc usage examples
+.. _sphx_glr_auto_gallery:
+
+SphinxDoc usage examples
 ==========================
 
 .. contents:: **Contents**

@@ -17,6 +17,34 @@
 .. _Doc: https://pysphinxdoc.readthedocs.io/en/latest/?badge=latest
 
 
+**Usage**
+
+|PythonVersion|_ |License|_
+
+**Development**
+
+|Linter|_ |Doc|_
+
+**Release**
+
+|PyPi|_
+
+
+.. |PythonVersion| image:: https://img.shields.io/badge/python-3.9%20%7C%203.12-blue
+.. _PythonVersion: https://github.com/AGrigis/pysphinxdoc
+
+.. |Linter| image:: https://github.com/AGrigis/pysphinxdoc/actions/workflows/pep8.yml/badge.svg
+.. _Linter: https://github.com/AGrigis/pysphinxdoc/actions
+
+.. |PyPi| image:: https://badge.fury.io/py/pysphinxdoc.svg
+.. _PyPi: https://badge.fury.io/py/pysphinxdoc
+
+.. |Doc| image:: https://github.com/AGrigis/pysphinxdoc/actions/workflows/documentation.yml/badge.svg
+.. _Doc: http://AGrigis.github.io/pysphinxdoc
+
+.. |License| image:: https://img.shields.io/badge/License-CeCILL--B-blue.svg
+.. _License: http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
+
 
 ===========
 pysphinxdoc

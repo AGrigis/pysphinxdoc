@@ -1,4 +1,4 @@
-name: "RUFF"
+name: "PEP8"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - "*"
 
 jobs:
-  ruff:
+  build:
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -30,8 +30,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install nose nose-exclude coverage coveralls ruff
+        python -m pip install nose nose-exclude coverage coveralls pycodestyle
         pip install --progress-bar off .
-    - name: Lint with Ruff
+    - name: Check Python syntax
       run: |
-        ruff check --diff pysphinxdoc
+        pycodestyle pysphinxdoc --ignore="E121,E123,E126,E226,E24,E704,E402,E731,E722,E741,W503,W504,W605,E305"

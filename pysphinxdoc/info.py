@@ -101,9 +101,11 @@ ISRELEASE = True
 VERSION = __version__
 PROVIDES = ["pysphinxdoc"]
 REQUIRES = [
-    "sphinx>=1.0",
+    ﻿"sphinx==7.2.6",
+    "sphinx-gallery==0.19.0",
+    "memory-profiler==0.61.0",
+    "setuptools",
     "matplotlib",
-    "mock",
-    "memory-profiler"
+    "mock"
 ]
 EXTRA_REQUIRES = {}

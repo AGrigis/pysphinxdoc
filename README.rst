@@ -11,7 +11,7 @@
 |PyPi|_
 
 
-.. |PythonVersion| image:: https://img.shields.io/badge/python-3.9%20%7C%203.12-blue
+.. |PythonVersion| image:: https://img.shields.io/badge/python-3.12-blue
 .. _PythonVersion: https://github.com/AGrigis/pysphinxdoc
 
 .. |Linter| image:: https://github.com/AGrigis/pysphinxdoc/actions/workflows/pep8.yml/badge.svg
@@ -31,23 +31,23 @@
 pysphinxdoc
 ===========
 
-[pysphinxdoc] API Documentation Generation Tool.
+API Documentation Generation Tool.
 
 Pysphinxdoc is a tool for generating automatically API documentation
-for Python modules, based on their reStructuredText docstrings, using the
-`sikit-learn <http://scikit-learn.org/>`_ theme,
-`Bootstrap <http://getbootstrap.com/>`_ and
+for Python modules, based on their reStructuredText docstrings, using
 `Sphinx <http://www.sphinx-doc.org/>`_.
-Visit this `module documentation <https://AGrigis.github.io/pysphinxdoc/>`_
+Visit this `module documentation <https://AGrigis.github.io/pysphinxdoc>`_
 for a live example.
 
 How to
 ------
 
 Here is an exemple to generate the 'pysphinxdoc' module documentation:
-first execute 'sphinxdoc -v 2 -p $HOME/git/pysphinxdoc/ -n pysphinxdoc
--o $HOME/git/pysphinxdoc/doc/' and then in the $HOME/git/pysphinxdoc/doc/
-folder 'make raw-html'.
+```
+sphinxdoc -v 2 -p $HOME/git/pysphinxdoc -n pysphinxdoc -o $HOME/git/pysphinxdoc/doc
+cd $HOME/git/pysphinxdoc/doc
+make raw-html
+```
 
 Expect a '$name_module/doc/source/_static' folder containing a logo named
 '$name_module.png' and an 'carousel' subfolder containing a list of images

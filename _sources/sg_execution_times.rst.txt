@@ -34,7 +34,7 @@ Computation times
      - Mem (MB)
    * - :ref:`sphx_glr_auto_gallery_commands_plot_docgen.py` (``../examples/commands/plot_docgen.py``)
      - 00:00.068
-     - 69.8
+     - 69.6
    * - :ref:`sphx_glr_auto_gallery_docgen.py` (``../examples/docgen.py``)
      - 00:00.000
      - 0.0

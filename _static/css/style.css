@@ -568,6 +568,7 @@ a.btn-customized-4.btn-customized-light.btn.btn-primary:not(:disabled):not(.disa
 
 .section-description { margin-top: 35px; padding-bottom: 10px; }
 
+.section-description { padding: 0 120px; }
 .section-description p { margin-top: 20px; }
 .section-container-image-bg .section-description p { opacity: 0.8; }
 

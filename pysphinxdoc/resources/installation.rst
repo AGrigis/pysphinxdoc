@@ -19,12 +19,9 @@ This tutorial will walk you through the process of intalling %(NAME_UPPER)s...
 Installing a stable version
 ==============================
 
-Install the python package with *pip*
--------------------------------------
-
 **Install the package without the root privilege**
 
->>> pip install --user %(NAME_LOWER)s
+>>> pip install %(NAME_LOWER)s
 
 **Install the package with the root privilege**
 
@@ -36,13 +33,9 @@ Install the python package with *pip*
 Installing the current version
 ===============================
 
-**Clone the project**
+**Install the package in develop mode from the Git repository**
 
->>> git clone %(URL)s
-
-**Install in the package directory created by the previous step**
-
->>> python setup.py develop --user
+>>> pip install -e git+%(URL)s
 
 
 

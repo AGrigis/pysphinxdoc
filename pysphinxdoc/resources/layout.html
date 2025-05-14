@@ -43,9 +43,9 @@
 					<i class="fas fa-arrow-left"></i>
 				</div>
 				
-				<div class="logo"">
+				<!-- <div class="logo"">
 					<h3><a href="{{pathto('index')}}">Sidebar Menu</a></h3>
-				</div>
+				</div> -->
 
                 <!-- info setup -->
                 {%- if pagename != "installation" %}
@@ -85,10 +85,10 @@
 					<li>
 						<a href="{{pathto('generated/search')}}"><i class="fas fa-search"></i> Search</a>
 					</li>
-					<li>
+					<!-- <li>
 						<a href="%(EXTRAURL)s"><i class="fas fa-external-link-alt"></i> %(EXTRANAME)s</a>
-					</li>
-					<li>
+					</li> -->
+					<!-- <li>
 						<a href="#otherSections" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" role="button" aria-controls="otherSections">
 							<i class="fas fa-sync"></i>Sections Shortcuts
 						</a>
@@ -117,21 +117,21 @@
                             <li>API</li>
                             %(SECTIONS)s
 						</ul>
-					</li>
+					</li> -->
 				</ul>
 				
                 <!-- go top page -->
-				<div class="to-top">
+				<!-- <div class="to-top">
 					<a class="btn btn-primary btn-customized-3" href="#" role="button">
 	                    <i class="fas fa-arrow-up"></i> Top
 	                </a>
-				</div>
+				</div> -->
 			
                 <!-- change color -->
-				<div class="dark-light-buttons">
+				<!-- <div class="dark-light-buttons">
 					<a class="btn btn-primary btn-customized-4 btn-customized-dark" href="#" role="button">Dark</a>
 					<a class="btn btn-primary btn-customized-4 btn-customized-light" href="#" role="button">Light</a>
-				</div>
+				</div> -->
 			
 			</nav>
 			<!-- End sidebar -->
@@ -189,8 +189,8 @@
                 {% else %}
                     {%- block document %}
                     {% set localbody = body
-                        | replace("</h1>", "</h1><div class='divider-1 wow fadeInUp'><span></span></div>")
-                        | replace("</h2>", "<i class='fas fa-angle-right'></i></h2>")
+                        | replace("</h1>", "</h1><div class='divider-1 wow fadeInUp' style='margin-top: -20px;'><span></span></div>")
+                        | replace("<h2>", "<h2 style='text-decoration: underline overline #aF8A4B;'>")
                         | replace("sphx-glr-thumbcontainer", "sphx-glr-thumbcontainer section-5-box wow fadeInUp")
                         | replace('class="figure', 'class="figure section-5-box-image')
                         | replace("class='float-left'", "class='section-3-box wow fadeInLeft'")
@@ -215,7 +215,7 @@
 			                    	<a href="https://www.facebook.com/pages/NeuroSpin/171075046414933"><i class="fab fa-facebook-f"></i></a>
 									<a href="https://www.youtube.com/CEASaclay"><i class="fab fa-youtube"></i></a>
 									<a href="https://twitter.com/neurospin_91"><i class="fab fa-twitter"></i></a>
-									<a href="https://github.com/AGrigis/pysphinxdoc"><i class="fab fa-github"></i></a>
+									<a href="https://gaia.neurospin.fr"><i class="fa fa-link"></i></a>
                                     <p>&copy; {{copyright}}</p>
 		                    	</div>
 		                    </div>
@@ -249,11 +249,12 @@
         {%- if pagename == 'index' %}
         <script>
             $('#mosaic').Mosaic({
-                maxRowHeight: 400,
+                maxRowHeight: 200,
                 refitOnResize: true,
                 refitOnResizeDelay: false,
-                defaultAspectRatio: 1,
-                maxRowHeightPolicy: 'skip'
+                defaultAspectRatio: 0.1,
+                maxRowHeightPolicy: 'oversize',
+                maxRows: 10,
             });
         </script>
         {% endif %}

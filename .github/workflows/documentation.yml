@@ -45,6 +45,7 @@ jobs:
     - name: Compute documentation
       run: |
         mkdir -p tmp/doc
+        cp -r doc/source tmp/doc
         sphinxdoc -v 2 -p . -n pysphinxdoc -o tmp/doc
         cd tmp/doc
         make raw-html

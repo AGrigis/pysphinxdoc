@@ -48,12 +48,12 @@ module-doc:
 	sphinxdoc -v 1 -p %(MODULE_PATH)s -n %(MODULE_NAME)s -o %(OUTDIR)s
  
 html: clean module-doc
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	$(SPHINXBUILD) -T -E -W --keep-going -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 raw-html: clean-build
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	$(SPHINXBUILD) -T -E -W --keep-going -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 

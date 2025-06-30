@@ -23,9 +23,6 @@ Installing a stable version
 
 >>> pip install %(NAME_LOWER)s
 
-**Install the package with the root privilege**
-
->>> sudo pip install %(NAME_LOWER)s
 
 
 .. _install_development:

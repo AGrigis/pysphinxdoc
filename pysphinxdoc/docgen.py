@@ -341,7 +341,7 @@ class DocHelperWriter(object):
                 self.generateddir))
 
         # Generate title
-        title = "Installing `{0}`".format(self.root_module_name)
+        title = "Installing ``{0}``".format(self.root_module_name.lower())
         title = [self.rst_section_levels[1] * len(title), title,
                  self.rst_section_levels[1] * len(title)]
 
@@ -412,8 +412,8 @@ class DocHelperWriter(object):
 
             # Header
             w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
-            title = "API documentation of {0}\n".format(
-                self.root_module_name.upper())
+            title = "API documentation of ``{0}``\n".format(
+                self.root_module_name.lower())
             w(title)
             w(self.rst_section_levels[1] * len(title) + "\n\n")
 
@@ -437,20 +437,50 @@ class DocHelperWriter(object):
                             _content.append((path, rpath))
                 content[module_name] = _content
 
-            # Modules
+            # Main modules
             w(".. raw:: html\n\n")
             w("    <!-- Block section -->\n\n")
             w("    <div class='container-fluid'>\n\n")
             w("    <div class='float-left'>\n\n")
             w("    <div class='row'>\n\n")
-            for cnt, module_name in enumerate(self.module_names):
+            cnt = 0
+            for module_name in self.module_names:
+                if not module_name.startswith(self.root_module_name):
+                    continue
                 w(self.generate_documentation_index_entry(module_name))
                 if (cnt + 1) % 3 == 0:
                     w("\n    </div>")
                     w("\n    <div class='row'>")
+                cnt += 1
             w("\n    </div>")
             w("\n    </div>")
             w("\n    </div>\n\n")
+
+            # Plugin modules
+            all_plugins = set([module_name.split(".")[0]
+                               for module_name in self.module_names])
+            all_plugins.remove(self.root_module_name)
+            if len(all_plugins) > 0:
+                w(".. raw:: html\n\n")
+                w("    <h2>Linked plugins</h2>\n\n")
+            for plugin_name in all_plugins:
+                w(".. raw:: html\n\n")
+                w("    <!-- Block section -->\n\n")
+                w("    <div class='container-fluid'>\n\n")
+                w("    <div class='float-left'>\n\n")
+                w("    <div class='row'>\n\n")
+                cnt = 0
+                for module_name in self.module_names:
+                    if not module_name.startswith(plugin_name):
+                        continue
+                    w(self.generate_documentation_index_entry(module_name))
+                    if (cnt + 1) % 3 == 0:
+                        w("\n    </div>")
+                        w("\n    <div class='row'>")
+                    cnt += 1
+                w("\n    </div>")
+                w("\n    </div>")
+                w("\n    </div>\n\n")
 
             # Add the list of modules
             w(".. rst-class:: documentation-contents\n\n")
@@ -486,8 +516,8 @@ class DocHelperWriter(object):
 
             # Header
             w(".. AUTO-GENERATED FILE -- DO NOT EDIT!\n\n")
-            title = "Search in API documentation of {0}\n".format(
-                self.root_module_name.upper())
+            title = "Search in API documentation of ``{0}``\n".format(
+                self.root_module_name.lower())
             w(title)
             w(self.rst_section_levels[1] * len(title) + "\n\n")
 
@@ -670,7 +700,8 @@ class DocHelperWriter(object):
                       "it. Please refer to the :ref:`gallery "
                       "<sphx_glr_auto_gallery>` for the big picture.\n\n")
                     w(".. autoclass:: {0}\n".format(klass))
-                    w("     :members:\n\n")
+                    w("     :members:\n")
+                    w("     :show-inheritance:\n\n")
                     w(".. minigallery:: {0}\n".format(
                         " ".join(alias_map[klass])
                         if klass in alias_map else klass))

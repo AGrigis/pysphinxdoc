@@ -190,7 +190,7 @@
                     {%- block document %}
                     {% set localbody = body
                         | replace("</h1>", "</h1><div class='divider-1 wow fadeInUp' style='margin-top: -20px;'><span></span></div>")
-                        | replace("<h2>", "<h2 style='text-decoration: underline overline #aF8A4B;'>")
+                        | replace("<h2>", "<h2 style='border-bottom: 1px solid #d3dbd5'>")
                         | replace("sphx-glr-thumbcontainer", "sphx-glr-thumbcontainer section-5-box wow fadeInUp")
                         | replace('class="figure', 'class="figure section-5-box-image')
                         | replace("class='float-left'", "class='section-3-box wow fadeInLeft'")

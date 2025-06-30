@@ -503,7 +503,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">generateddir</span><span class="p">))</span>
 
         <span class="c1"># Generate title</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Installing `</span><span class="si">{0}</span><span class="s2">`&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Installing ``</span><span class="si">{0}</span><span class="s2">``&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
         <span class="n">title</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="n">title</span><span class="p">,</span>
                  <span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)]</span>
 
@@ -580,8 +580,8 @@
 
             <span class="c1"># Header</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. AUTO-GENERATED FILE -- DO NOT EDIT!</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;API documentation of </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;API documentation of ``</span><span class="si">{0}</span><span class="s2">``</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
             <span class="n">w</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -605,20 +605,50 @@
                             <span class="n">_content</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">rpath</span><span class="p">))</span>
                 <span class="n">content</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_content</span>
 
-            <span class="c1"># Modules</span>
+            <span class="c1"># Main modules</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. raw:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;!-- Block section --&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;container-fluid&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;float-left&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;row&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">):</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">module_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">):</span>
+                    <span class="k">continue</span>
                 <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_documentation_index_entry</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
                     <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;div class=&#39;row&#39;&gt;&quot;</span><span class="p">)</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Plugin modules</span>
+            <span class="n">all_plugins</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">module_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                               <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">])</span>
+            <span class="n">all_plugins</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_plugins</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. raw:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;h2&gt;Linked plugins&lt;/h2&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">plugin_name</span> <span class="ow">in</span> <span class="n">all_plugins</span><span class="p">:</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. raw:: html</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;!-- Block section --&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;container-fluid&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;float-left&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;    &lt;div class=&#39;row&#39;&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">module_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">module_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generate_documentation_index_entry</span><span class="p">(</span><span class="n">module_name</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
+                        <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;div class=&#39;row&#39;&gt;&quot;</span><span class="p">)</span>
+                    <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;&quot;</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &lt;/div&gt;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># Add the list of modules</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. rst-class:: documentation-contents</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -657,8 +687,8 @@
 
             <span class="c1"># Header</span>
             <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. AUTO-GENERATED FILE -- DO NOT EDIT!</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Search in API documentation of </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Search in API documentation of ``</span><span class="si">{0}</span><span class="s2">``</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">root_module_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
             <span class="n">w</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
             <span class="n">w</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rst_section_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -853,7 +883,8 @@
                       <span class="s2">&quot;it. Please refer to the :ref:`gallery &quot;</span>
                       <span class="s2">&quot;&lt;sphx_glr_auto_gallery&gt;` for the big picture.</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. autoclass:: </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">klass</span><span class="p">))</span>
-                    <span class="n">w</span><span class="p">(</span><span class="s2">&quot;     :members:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">w</span><span class="p">(</span><span class="s2">&quot;     :members:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">w</span><span class="p">(</span><span class="s2">&quot;     :show-inheritance:</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">w</span><span class="p">(</span><span class="s2">&quot;.. minigallery:: </span><span class="si">{0}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">alias_map</span><span class="p">[</span><span class="n">klass</span><span class="p">])</span>
                         <span class="k">if</span> <span class="n">klass</span> <span class="ow">in</span> <span class="n">alias_map</span> <span class="k">else</span> <span class="n">klass</span><span class="p">))</span>

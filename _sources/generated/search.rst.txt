@@ -1,7 +1,7 @@
 .. AUTO-GENERATED FILE -- DO NOT EDIT!
 
-Search in API documentation of PYSPHINXDOC
-===========================================
+Search in API documentation of ``pysphinxdoc``
+===============================================
 
 .. raw:: html
 

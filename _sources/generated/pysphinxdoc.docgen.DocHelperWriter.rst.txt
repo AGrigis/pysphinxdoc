@@ -8,6 +8,7 @@
 
 .. autoclass:: pysphinxdoc.docgen.DocHelperWriter
      :members:
+     :show-inheritance:
 
 .. minigallery:: pysphinxdoc.docgen.DocHelperWriter
     :add-heading: Examples
